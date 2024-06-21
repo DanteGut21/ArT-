@@ -13,10 +13,8 @@ import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
 
-//    lateinit var BtnPrincipal: Button
-//    lateinit var BtnRegistro: Button
-//    lateinit var EdtUsuario: EditText
-//    lateinit var EdtContraseña: EditText
+    lateinit var EUsuario:EditText
+    lateinit var EContraseña:EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,30 +25,28 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-//
-//        BtnPrincipal.findViewById<Button>(R.id.btnInicio)
-//        BtnRegistro.findViewById<Button>(R.id.btnRegistro)
-//        EdtUsuario.findViewById<EditText>(R.id.edtUsuario)
-//        EdtContraseña.findViewById<EditText>(R.id.edtpPassword)
-    }
 
-//    fun principal(vista: View){
-//        if (EdtUsuario.text.isEmpty() || EdtContraseña.text.isEmpty()){
-//            Toast.makeText(this, "Usuario o contraseña no validos.", Toast.LENGTH_SHORT).show()
-//
-//        }else{
-//            Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
-//            val intent = Intent(this, Inicio::class.java)
-//            startActivity(intent)
-//            finish()
-//            true
-//        }
-//    }//principal
+        EUsuario = findViewById<EditText>(R.id.edtUsuario)
+        EContraseña = findViewById<EditText>(R.id.edtpPassword)
+    }//onCreate
 
-//    fun Registro(vista: View){
-//        val intent = Intent(this, Registro::class.java)
-//        startActivity(intent)
-//        finish()
-//        true
-//    }//Registro
+    fun principal(vista: View){
+        if (EUsuario.text.isEmpty() || EContraseña.text.isEmpty()){
+            Toast.makeText(this, "Usuario o contraseña no validos.", Toast.LENGTH_SHORT).show()
+
+        }else{
+            Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, Inicio::class.java)
+            startActivity(intent)
+            finish()
+            true
+        }
+    }//principal
+
+    fun Registro(vista: View){
+        val intent = Intent(this, Registro::class.java)
+        startActivity(intent)
+        finish()
+        true
+    }//Registro
 }
