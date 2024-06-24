@@ -13,8 +13,8 @@ import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var EUsuario:EditText
-    lateinit var EContraseña:EditText
+//    lateinit var EUsuario:EditText
+//    lateinit var EContraseña:EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,27 +26,34 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        EUsuario = findViewById<EditText>(R.id.edtUsuario)
-        EContraseña = findViewById<EditText>(R.id.edtpPassword)
+//        EUsuario = findViewById<EditText>(R.id.edtUsuario)
+//        EContraseña = findViewById<EditText>(R.id.edtpPassword)
     }//onCreate
 
-    fun principal(vista: View){
-        if (EUsuario.text.isEmpty() || EContraseña.text.isEmpty()){
-            Toast.makeText(this, "Usuario o contraseña no validos.", Toast.LENGTH_SHORT).show()
+//    fun principal(vista: View){
+//        if (EUsuario.text.isEmpty() || EContraseña.text.isEmpty()){
+//            Toast.makeText(this, "Usuario o contraseña no validos.", Toast.LENGTH_SHORT).show()
+//
+//        }else{
+//            Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
+//            val intent = Intent(this, Inicio::class.java)
+//            startActivity(intent)
+//            finish()
+//            true
+//        }
+//    }//principal
+//
+//    fun Registro(vista: View){
+//        val intent = Intent(this, Registro::class.java)
+//        startActivity(intent)
+//        finish()
+//        true
+//    }//Registro
 
-        }else{
-            Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, Inicio::class.java)
-            startActivity(intent)
-            finish()
-            true
-        }
-    }//principal
-
-    fun Registro(vista: View){
-        val intent = Intent(this, Registro::class.java)
+    fun Login(vista: View){
+        val intent = Intent(this, Login::class.java)
         startActivity(intent)
         finish()
         true
-    }//Registro
-}
+    }//login
+}//MainActivity
