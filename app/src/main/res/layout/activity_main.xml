@@ -18,47 +18,76 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+    <LinearLayout
+        android:id="@+id/llNotificacion"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/GreenLeave"
+        app:layout_constraintTop_toBottomOf="@+id/tbPrincipal"
+        tools:layout_editor_absoluteX="0dp">
 
-    <!-- Contenedor principal para la imagen y el texto -->
-    <!-- Barra de navegación inferior -->
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/location"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="Av. *********"
+            android:textSize="20dp"
+            android:textColor="@color/Brown"
+            android:gravity="center"/>
+
+
+<!--        Espacio dedicado a la creacion de las notificaciones de la App-->
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
+        android:layout_height="0dp"
+        android:layout_below="@id/tbPrincipal"
+        android:background="@color/Beige"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="50dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="50dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/llNotificacion"
         app:layout_constraintVertical_bias="0.0">
 
-        <!-- ImageView para la imagen del té -->
 
-        <!-- TextView para el nombre del té -->
-
-        <ImageView
-            android:id="@+id/teaImage"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:src="@drawable/te" />
-
-        <TextView
-            android:id="@+id/teaName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingTop="8dp"
-            android:text="Nombre del té"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-        <!-- CardView para el título y cuerpo del diálogo -->
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/teaImage"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/te" />
+
+            <TextView
+                android:id="@+id/teaName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:text="Nombre del té"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/GreenLeave"
+                android:textSize="30dp" />
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginTop="16dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="4dp">
@@ -88,6 +117,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
