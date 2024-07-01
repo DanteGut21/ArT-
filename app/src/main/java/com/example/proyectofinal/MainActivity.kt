@@ -1,12 +1,14 @@
 package com.example.proyectofinal
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -24,8 +26,16 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+//        val searchView: SearchView = findViewById(R.id.svBusqueda)
+//        // Cambiar el color del texto
+//        val searchText = searchView.findViewById(androidx.appcompat.R.id.search_src_text) as android.widget.TextView
+//        searchText.setTextColor(Color.GREEN)  // Cambiar a tu color preferido
+//        searchText.setHintTextColor(Color.GRAY)  // Cambiar a tu color preferido
+
         val toolbar: Toolbar = findViewById(R.id.tbPrincipal)
         setSupportActionBar(toolbar)
+        // Oculta el título predeterminado del Toolbar
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         // Configura la BottomNavigationView
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
