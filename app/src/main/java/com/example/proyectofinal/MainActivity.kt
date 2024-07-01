@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_more -> {
-                    // Maneja la acción del botón More
+                    loadFragment(Usuario())
                     true
                 }
                 else -> false
