@@ -46,13 +46,14 @@
             android:rowCount="1"
             android:background="@color/Beige"
             android:padding="8dp">
-
             <!-- Repetir para cada producto -->
             <LinearLayout
+                android:id="@+id/ItemTienda"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
+                android:onClick="Pr"
                 android:padding="8dp">
                 <ImageView
                     android:layout_width="80dp"
