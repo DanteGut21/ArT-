@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_cart -> {
-                    // Maneja la acción del botón Cart
+                    loadFragment(Carrito())
                     true
                 }
                 R.id.navigation_more -> {
