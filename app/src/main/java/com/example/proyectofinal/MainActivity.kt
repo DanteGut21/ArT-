@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_profile -> {
-                    // Maneja la acción del botón Profile
+                    loadFragment(Tienda())
                     true
                 }
                 R.id.navigation_cart -> {
