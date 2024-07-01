@@ -3,6 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_login"
-        android:title="Login"
+        android:title=""
         app:showAsAction="ifRoom" />
 </menu>

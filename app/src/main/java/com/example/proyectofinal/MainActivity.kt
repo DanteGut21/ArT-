@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -25,12 +26,13 @@ class MainActivity : AppCompatActivity() {
 
         val toolbar: Toolbar = findViewById(R.id.tbPrincipal)
         setSupportActionBar(toolbar)
+
         // Configura la BottomNavigationView
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    // Maneja la acción del botón Home
+                    loadFragment(Principal())
                     true
                 }
                 R.id.navigation_profile -> {
@@ -48,14 +50,18 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-    }//onCreate
-//
-//    fun Login(vista: View){
-//        val intent = Intent(this, Login::class.java)
-//        startActivity(intent)
-//        finish()
-//        true
-//    }//login
+
+        // Cargar el fragmento inicial
+        if (savedInstanceState == null) {
+            loadFragment(Principal())
+        }
+    }
+
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Infla el menú; esto añade elementos a la barra de acción si está presente.
@@ -74,4 +80,4 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-}//MainActivity
+}
