@@ -29,18 +29,27 @@ class Login : AppCompatActivity() {
     }//OnCreate
 
 
-    fun principal(vista: View){
-        if (EUsuario.text.isEmpty() || EContraseña.text.isEmpty()){
-            Toast.makeText(this, "Usuario o contraseña no validos.", Toast.LENGTH_SHORT).show()
-
-        }else{
-            Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-            true
+    fun principal(vista: View) {
+        // Comprobando si alguno de los campos está vacío
+        if (EUsuario.text.isEmpty() || EContraseña.text.isEmpty()) {
+            Toast.makeText(this, "Usuario o contraseña no válidos.", Toast.LENGTH_SHORT).show()
+        } else {
+            // Comprobando si las credenciales son de un administrador
+            if (EUsuario.text.toString() == "Admin" && EContraseña.text.toString() == "admin") {
+                Toast.makeText(this, "Bienvenido Administrador", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, Administracion::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                // Si no es administrador, se asume que es un usuario normal
+                Toast.makeText(this, "Bienvenido Usuario", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
-    }//principal
+    }
+//principal
 
     fun Registro(vista: View){
         val intent = Intent(this, Registro::class.java)
