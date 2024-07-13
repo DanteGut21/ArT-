@@ -57,7 +57,6 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
             android:text="Opción 2" />
 
         <CheckBox
@@ -75,7 +74,9 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/GreenMint"
+        android:background="@drawable/bot_cua_greendark"
+        android:backgroundTint="@color/GreenDark"
+        android:drawableTint="@color/GreenDark"
         android:padding="16dp"
         android:text="Realizar pedido"
         android:textColor="@android:color/white"

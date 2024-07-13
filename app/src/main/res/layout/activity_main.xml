@@ -18,14 +18,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
         <ImageView
             android:id="@+id/toolbar_logo"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/arte" />
-
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
@@ -38,28 +36,11 @@
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
-        android:id="@+id/llBusqueda"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/Brown"
-        app:layout_constraintTop_toBottomOf="@+id/tbPrincipal">
-        <SearchView
-            android:id="@+id/svBusqueda"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:searchIcon="@drawable/busqueda"
-            android:queryHint="Buscar..."
-            android:background="@drawable/rounded_searchview">
-        </SearchView>
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/llNotificacion"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/GreenLeave"
-        app:layout_constraintTop_toBottomOf="@+id/llBusqueda"
+        app:layout_constraintTop_toBottomOf="@+id/tbPrincipal"
         tools:layout_editor_absoluteX="-16dp">
         <ImageView
             android:layout_width="30dp"
@@ -77,14 +58,32 @@
         <!--        Espacio dedicado a la creacion de las notificaciones de la App-->
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/llBusqueda"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/Brown"
+        app:layout_constraintTop_toBottomOf="@+id/llNotificacion">
+
+        <SearchView
+            android:id="@+id/svBusqueda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/rounded_searchview"
+            android:queryHint="Buscar..."
+            android:searchIcon="@drawable/busqueda"></SearchView>
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintTop_toBottomOf="@+id/llNotificacion"
+        app:layout_constraintTop_toBottomOf="@+id/llBusqueda"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
