@@ -38,6 +38,13 @@ class Administracion : AppCompatActivity() {
                     Item(name = "Producto3", quantity = 1)
                 ),
                 status = "pago pendiente"
+            ),
+            Order(
+                userName = "Usuario3",
+                items = listOf(
+                    Item(name = "Producto4", quantity = 1)
+                ),
+                status = "cancelado"
             )
         )
 
