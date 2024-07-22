@@ -24,19 +24,16 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-//        val searchView: SearchView = findViewById(R.id.svBusqueda)
-//        // Cambiar el color del texto
-//        val searchText = searchView.findViewById(androidx.appcompat.R.id.search_src_text) as android.widget.TextView
-//        searchText.setTextColor(Color.GREEN)  // Cambiar a tu color preferido
-//        searchText.setHintTextColor(Color.GRAY)  // Cambiar a tu color preferido
-
         val toolbar: Toolbar = findViewById(R.id.tbPrincipal)
         setSupportActionBar(toolbar)
-        // Oculta el título predeterminado del Toolbar
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         // Configura la BottomNavigationView
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        // Oculta inicialmente el botón de gestión
+        val manageItem = bottomNavigationView.menu.findItem(R.id.navigation_manage)
+        manageItem.isVisible = false  // Ocultar hasta que se verifique el login
+
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
@@ -55,7 +52,6 @@ class MainActivity : AppCompatActivity() {
                     loadFragment(Usuario())
                     true
                 }
-
                 R.id.navigation_manage -> {
                     loadFragment(GestionP())
                     true
@@ -64,10 +60,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Cargar el fragmento inicial
         if (savedInstanceState == null) {
             loadFragment(Principal())
         }
+
+        // Comprobar si es admin al iniciar la actividad
+        checkAdmin()
+    }
+
+    private fun checkAdmin() {
+        val isAdmin = intent.getBooleanExtra("isAdmin", false)
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigationView.menu.findItem(R.id.navigation_manage).isVisible = isAdmin
     }
 
     private fun loadFragment(fragment: Fragment) {
@@ -77,7 +81,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        // Infla el menú; esto añade elementos a la barra de acción si está presente.
         menuInflater.inflate(R.menu.toolbar_menu, menu)
         return true
     }
@@ -85,7 +88,6 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_login -> {
-                // Acción para abrir LoginActivity
                 val intent = Intent(this, Login::class.java)
                 startActivity(intent)
                 true
