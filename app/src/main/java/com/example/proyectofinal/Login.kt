@@ -40,6 +40,7 @@ class Login : AppCompatActivity() {
                 val intent = Intent(this, Administracion::class.java)
                 startActivity(intent)
                 finish()
+
             } else {
                 // Si no es administrador, se asume que es un usuario normal
                 Toast.makeText(this, "Bienvenido Usuario", Toast.LENGTH_SHORT).show()

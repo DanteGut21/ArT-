@@ -12,6 +12,10 @@
         app:showAsAction="always"
          />
     <item
+        android:id="@+id/navigation_manage"
+        android:icon="@drawable/manage"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/navigation_cart"
         android:icon="@drawable/shopping"
         app:showAsAction="always"
