@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/Beige"
+    android:orientation="vertical"
     tools:context=".Carrito">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
-
-        <!-- Subtotal y botón de proceder al pago -->
+        android:paddingTop="18dp">
         <TextView
             android:id="@+id/subtotal"
             android:layout_width="match_parent"
@@ -19,8 +19,8 @@
             android:text="Subtotal $****"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:paddingBottom="8dp"/>
-
+            android:gravity="center"
+            android:paddingBottom="8dp" />
         <Button
             android:id="@+id/proceed_to_checkout"
             android:layout_width="match_parent"
@@ -31,143 +31,20 @@
             android:padding="12dp"
             android:textSize="16sp"
             android:layout_marginBottom="8dp"/>
-
-        <!-- Opción de enviar como regalo -->
         <CheckBox
             android:id="@+id/send_as_gift"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Send as a gift. Easy returns."
             android:paddingBottom="16dp"/>
-
-        <!-- Item 1 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:background="@color/white">
-
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/te"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="8dp"/>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Long and Descriptive Listing Title to Catch Attention"
-                    android:textSize="16sp"
-                    android:paddingBottom="4dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$12.34"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:paddingBottom="4dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="FREE Returns"
-                    android:textSize="14sp"
-                    android:paddingBottom="4dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="In Stock"
-                    android:textSize="14sp"
-                    android:paddingBottom="4dp"/>
-
-                <Button
-                    android:id="@+id/clip_save"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Clip and Save up to $2.00"
-                    android:background="@color/white"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:padding="4dp"
-                    android:layout_marginBottom="8dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Conditions apply"
-                    android:textSize="12sp"
-                    android:paddingBottom="8dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/delete"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Delete"
-                        android:background="@color/red"
-                        android:textColor="@color/black"/>
-
-                    <Button
-                        android:id="@+id/save_for_later"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Save for later"
-                        android:background="@color/gray"
-                        android:textColor="@color/black"/>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Compare with similar items"
-                    android:textSize="12sp"
-                    android:paddingTop="8dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <Button
-                    android:id="@+id/decrement"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:text="-"
-                    android:background="@drawable/delete"/>
-
-                <TextView
-                    android:id="@+id/quantity"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:text="1"
-                    android:gravity="center"
-                    android:textSize="16sp"/>
-
-                <Button
-                    android:id="@+id/increment"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:text="+"
-                    android:background="@drawable/add"/>
-            </LinearLayout>
-        </LinearLayout>
-
     </LinearLayout>
-</ScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="10dp"></androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>
