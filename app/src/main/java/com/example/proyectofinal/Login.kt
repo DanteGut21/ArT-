@@ -37,7 +37,7 @@ class Login : AppCompatActivity() {
             // Comprobando si las credenciales son de un administrador
             if (EUsuario.text.toString() == "Admin" && EContraseña.text.toString() == "admin") {
                 Toast.makeText(this, "Bienvenido Administrador", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, Administracion::class.java)
+//                val intent = Intent(this, Administracion::class.java)
                 startActivity(intent)
                 finish()
 
