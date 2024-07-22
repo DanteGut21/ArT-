@@ -44,5 +44,12 @@ class Login : AppCompatActivity() {
 
         startActivity(intent)
         finish()
-    }
-}
+    }//Principal
+
+    fun Registro(vista: View) {
+        val intent = Intent(this, Registro::class.java)
+        startActivity(intent)
+        finish()
+        true
+    }//Registro
+}//Class login

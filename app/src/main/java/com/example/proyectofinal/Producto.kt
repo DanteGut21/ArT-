@@ -18,11 +18,17 @@ class Producto : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_producto, container, false)
         val btnPago: Button = view.findViewById(R.id.btnPago)
+        val btnCarrito: Button = view.findViewById(R.id.btnCarrito)
         btnPago.setOnClickListener {
             // Aquí manejarías el pago por transferencia bancaria
             Toast.makeText(context, "Pagos...", Toast.LENGTH_SHORT).show()
             val intent = Intent(activity, PagoProducto::class.java)
             startActivity(intent)
+        }
+        btnCarrito.setOnClickListener {
+            Toast.makeText(context, "Carrito", Toast.LENGTH_SHORT).show()
+//            val intent = Intent(this, Carrito::class.java)
+//            startActivity(intent)
         }
         return view
     }
