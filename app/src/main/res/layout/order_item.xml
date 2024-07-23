@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="8dp">
+    android:layout_margin="5dp"
+    android:background="@drawable/bordeitem"
+    android:padding="12dp">
 
     <ImageView
         android:id="@+id/productImageView"
@@ -13,32 +16,31 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
-
+        android:padding="16dp"
+        tools:ignore="ExtraText">fddd
     <TextView
         android:id="@+id/userNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nombre del Usuario"
-        android:textSize="16sp"
+        android:textColor="@color/GreenDark"
+        android:textSize="22sp"
         android:textStyle="bold" />
-
     <TextView
         android:id="@+id/itemsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Lista de Artículos"
-        android:textSize="14sp" />
-
+        android:textColor="@color/GreenLeave"
+        android:textSize="18sp" />
     <TextView
         android:id="@+id/statusTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Estado del Pedido"
-        android:textSize="14sp" />
+        android:textSize="18sp" />
     </LinearLayout>
 
 </LinearLayout>
