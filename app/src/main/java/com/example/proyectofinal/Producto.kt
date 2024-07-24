@@ -1,6 +1,5 @@
 package com.example.proyectofinal
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 
 class Producto : Fragment() {
 
@@ -22,8 +22,14 @@ class Producto : Fragment() {
         btnPago.setOnClickListener {
             // Aquí manejarías el pago por transferencia bancaria
             Toast.makeText(context, "Pagos...", Toast.LENGTH_SHORT).show()
-            val intent = Intent(activity, PagoProducto::class.java)
-            startActivity(intent)
+//            val intent = Intent(activity, PagoProducto::class.java)
+//            startActivity(intent)
+
+            val pago = Pago()
+            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, pago)
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
         btnCarrito.setOnClickListener {
             Toast.makeText(context, "Carrito", Toast.LENGTH_SHORT).show()

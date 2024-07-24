@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Beige"
+    android:background="@color/white"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".Producto">
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/borde"
+        android:background="@drawable/bordeitem"
         android:elevation="2dp"
         android:orientation="vertical"
         android:padding="16dp">
@@ -71,7 +71,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="4dp">
-
         <Button
             android:id="@+id/btnPago"
             android:layout_width="match_parent"
@@ -83,7 +82,6 @@
             android:text="Pagar pedido"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
-
         <Button
             android:id="@+id/btnCarrito"
             android:layout_width="match_parent"
@@ -95,7 +93,5 @@
             android:text="Carrito de compras"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
-
     </LinearLayout>
-
 </LinearLayout>
