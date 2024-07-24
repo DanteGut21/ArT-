@@ -7,72 +7,86 @@
     android:layout_height="match_parent"
     tools:context=".Login">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/Beige"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-    <ImageView
-        android:id="@+id/IUsa"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:layout_marginTop="90dp"
-        android:src="@drawable/user"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bordecontent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="50dp">
 
-    <EditText
-        android:id="@+id/edtUsuario"
-        android:layout_width="202dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="84dp"
-        android:hint="Usuario"
-        android:inputType="text"
-        android:textColor="@color/GreenMint"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/IUsa" />
+            <ImageView
+                android:id="@+id/IUsa"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_marginBottom="40dp"
+                android:src="@drawable/user"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/edtpPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:ems="10"
-        android:hint="contraseña"
-        android:inputType="textPassword"
-        android:textColor="@color/GreenMint"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtUsuario" />
+            <EditText
+                android:id="@+id/edtUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Usuario"
+                android:inputType="text"
+                android:textColor="@color/GreenMint"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/IUsa" />
 
-    <Button
-        android:id="@+id/btnInicio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:backgroundTint="@color/GreenMint"
-        android:onClick="principal"
-        android:text="Inicio de sección"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtpPassword" />
+            <EditText
+                android:id="@+id/edtpPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Contraseña"
+                android:inputType="textPassword"
+                android:textColor="@color/GreenMint"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edtUsuario" />
 
-    <Button
-        android:id="@+id/btnRegistro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:backgroundTint="@color/Beige"
-        android:onClick="Registro"
-        android:text="Registro"
-        android:textColor="@color/GreenMint"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnInicio" />
+            <Button
+                android:id="@+id/btnInicio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:backgroundTint="@color/GreenMint"
+                android:onClick="principal"
+                android:text="Inicio de sesión"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edtpPassword" />
 
+            <Button
+                android:id="@+id/btnRegistro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/Beige"
+                android:onClick="Registro"
+                android:text="Registro"
+                android:textColor="@color/GreenMint"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnInicio" />
+        </LinearLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
