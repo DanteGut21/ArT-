@@ -9,31 +9,58 @@
     tools:context=".Producto">
 
     <!-- Imagen y nombre del té -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/te" />
-        <TextView
+        android:orientation="vertical">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingStart="24dp"
-            android:text="Nombre del té"
-            android:textColor="@color/GreenMint"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/te" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingStart="24dp"
+                android:text="Nombre del té"
+                android:textColor="@color/GreenMint"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dragon Ball es un té verde artesanal. Es un deleite visual y bastante raro.
+Las hojas se elaboran a mano en bolas que se transforman en flores cuando se sumergen en agua caliente.
+Aroma floral, licor amarillo claro y sabor herbáceo.
+Una bola es suficiente para toda la olla y rinde para 4-5 tazas.
+Se recomienda preparar este té en una tetera de vidrio.
+Tiempo de preparación: 4-5min"
+                android:textColor="@color/Brown" />
+        </LinearLayout>
+
     </LinearLayout>
     <!-- Personalización pedido -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:text="Personalización pedido"
         android:textSize="26sp"
         android:textColor="@color/GreenDark"
@@ -47,23 +74,23 @@
         android:background="@drawable/bordeitem"
         android:elevation="2dp"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="12dp">
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Opción 1" />
+            android:text="En combo" />
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Opción 2" />
+            android:text="En piezas" />
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Opción 3" />
+            android:text="Presentación artesanal" />
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Opción 4" />
+            android:text="Opción X" />
     </LinearLayout>
 
     <LinearLayout

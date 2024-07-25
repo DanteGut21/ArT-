@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="Proceed to checkout (4 items)"
             android:backgroundTint="@color/GreenLeave"
-            android:textColor="@android:color/white"
+            android:textColor="@color/Brown"
             android:padding="12dp"
             android:textSize="16sp"
             android:layout_marginBottom="8dp"/>
