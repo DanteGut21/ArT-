@@ -37,5 +37,5 @@ class Producto : Fragment() {
 //            startActivity(intent)
         }
         return view
-    }
+    }//OnCreateView
 }//Class Producto
