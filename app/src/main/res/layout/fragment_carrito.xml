@@ -13,7 +13,7 @@
         android:orientation="vertical"
         android:paddingTop="18dp">
         <TextView
-            android:id="@+id/subtotal"
+            android:id="@+id/tvSubTotal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Subtotal $****"
@@ -22,20 +22,22 @@
             android:gravity="center"
             android:paddingBottom="8dp" />
         <Button
-            android:id="@+id/proceed_to_checkout"
+            android:id="@+id/btnPPago"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Proceed to checkout (4 items)"
+            android:layout_margin="18dp"
             android:backgroundTint="@color/GreenLeave"
             android:textColor="@color/Brown"
             android:padding="12dp"
             android:textSize="16sp"
-            android:layout_marginBottom="8dp"/>
+            android:text="Proceder con el pago" />
         <CheckBox
-            android:id="@+id/send_as_gift"
-            android:layout_width="wrap_content"
+            android:id="@+id/cbRegalo"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Send as a gift. Easy returns."
+            android:gravity="center_vertical"
+            android:text="Enviar como regalo"
+            android:textColor="@color/Brown"
             android:paddingBottom="16dp"/>
     </LinearLayout>
 

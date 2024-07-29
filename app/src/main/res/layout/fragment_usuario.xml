@@ -14,119 +14,140 @@
 
         <!-- Sección del usuario -->
         <LinearLayout
+            android:id="@+id/llDatosUsario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:gravity="center_vertical"
-            android:paddingBottom="16dp">
-            <TextView
-                android:layout_width="0dp"
+            android:padding="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nombre del Usuario"
-                android:textSize="18sp"
-                android:layout_weight="1"
-                android:paddingEnd="8dp"/>
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/user"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingEnd="8dp"
+                    android:text="Nombre del Usuario"
+                    android:textColor="@color/Brown"
+                    android:textSize="20dp" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/user" />
+            </LinearLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alignmentMode="alignMargins"
+                android:columnCount="2"
+                android:rowCount="2">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="8dp"
+                    android:backgroundTint="@color/GreenMint"
+                    android:text="Opción usuario"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="8dp"
+                    android:backgroundTint="@color/GreenMint"
+                    android:text="Opción usuario"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="8dp"
+                    android:backgroundTint="@color/GreenMint"
+                    android:text="Opción usuario"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="8dp"
+                    android:backgroundTint="@color/GreenMint"
+                    android:text="Opción usuario"
+                    android:textColor="@android:color/white" />
+            </GridLayout>
         </LinearLayout>
 
-        <!-- Opciones del usuario -->
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:rowCount="2"
-            android:alignmentMode="alignMargins"
-            android:paddingBottom="16dp">
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:layout_columnWeight="1"
-                android:backgroundTint="@color/GreenMint"
-                android:text="Opción usuario"
-                android:textColor="@android:color/white"/>
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:layout_columnWeight="1"
-                android:backgroundTint="@color/GreenMint"
-                android:text="Opción usuario"
-                android:textColor="@android:color/white"/>
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:layout_columnWeight="1"
-                android:backgroundTint="@color/GreenMint"
-                android:text="Opción usuario"
-                android:textColor="@android:color/white"/>
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:layout_columnWeight="1"
-                android:backgroundTint="@color/GreenMint"
-                android:text="Opción usuario"
-                android:textColor="@android:color/white"/>
-        </GridLayout>
-
-        <!-- Órdenes anteriores -->
         <LinearLayout
+            android:id="@+id/llDatosPedido"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingBottom="8dp">
-            <TextView
-                android:layout_width="0dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ordenes anteriores"
-                android:textSize="16sp"
-                android:layout_weight="1"/>
-            <TextView
-                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ordenes anteriores"
+                    android:textColor="@color/Brown"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ver más"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ver más"
-                android:textSize="14sp"
-                android:textColor="@android:color/holo_blue_dark"/>
+                android:alignmentMode="alignMargins"
+                android:columnCount="2"
+                android:paddingBottom="16dp">
+                <!-- Repetir para cada orden anterior -->
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/te" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/te" />
+            </GridLayout>
+
+            <Button
+                android:id="@+id/btnEnvio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/Brown"
+                android:drawableLeft="@drawable/map"
+                android:padding="16dp"
+                android:text="Consulta tu pedido"
+                android:textColor="@android:color/white" />
         </LinearLayout>
-
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:alignmentMode="alignMargins"
-            android:paddingBottom="16dp">
-
-            <!-- Repetir para cada orden anterior -->
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_margin="8dp"
-                android:layout_columnWeight="1"
-                android:src="@drawable/te"/>
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_margin="8dp"
-                android:layout_columnWeight="1"
-                android:src="@drawable/te"/>
-        </GridLayout>
-
-        <!-- Botón para consultar pedido -->
-        <Button
-            android:id="@+id/btnEnvio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/Brown"
-            android:text="Consulta tu pedido"
-            android:textColor="@android:color/white"
-            android:drawableLeft="@drawable/map"
-            android:padding="16dp"/>
     </LinearLayout>
 </FrameLayout>
