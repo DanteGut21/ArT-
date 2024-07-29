@@ -18,9 +18,10 @@
 
         <ImageView
             android:id="@+id/IUsa"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:src="@drawable/user"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/art"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,85 +35,87 @@
             android:gravity="center"
             android:orientation="vertical"
             android:padding="24dp">
-
             <EditText
                 android:id="@+id/edtNombre"
                 android:layout_width="match_parent"
-                android:layout_height="51dp"
+                android:layout_height="50dp"
                 android:background="@color/white"
                 android:hint="Nombre"
                 android:inputType="text"
                 android:textColor="@color/GreenMint"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent" />
-
             <EditText
                 android:id="@+id/edtApellido"
                 android:layout_width="match_parent"
-                android:layout_height="51dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="50dp"
                 android:background="@color/white"
                 android:hint="Apellido"
                 android:inputType="text"
                 android:textColor="@color/GreenMint"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edtNombre" />
+                app:layout_constraintStart_toStartOf="parent" />
 
+            <EditText
+                android:id="@+id/edtCorreo"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:hint="Correo electronico"
+                android:inputType="text"
+                android:textColor="@color/GreenMint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
             <EditText
                 android:id="@+id/edtpPassword2"
                 android:layout_width="match_parent"
-                android:layout_height="51dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="50dp"
                 android:background="@color/white"
-                android:ems="10"
                 android:hint="Contraseña"
                 android:inputType="textPassword"
                 android:textColor="@color/GreenMint"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edtApellido" />
-
+                app:layout_constraintStart_toStartOf="parent" />
             <EditText
                 android:id="@+id/edtpPassword3"
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="50dp"
                 android:background="@color/white"
-                android:ems="10"
                 android:hint="Confirmar contraseña"
                 android:inputType="textPassword"
                 android:textColor="@color/GreenMint"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edtpPassword2" />
+                app:layout_constraintStart_toStartOf="parent" />
         </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/chbTerminos"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Términos y condiciones"
-            android:textColor="@color/Brown"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edtpPassword3" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="18dp">
 
-        <Button
-            android:id="@+id/btnRegistroUsu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="@color/GreenMint"
-            android:text="Terminar registro"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chbTerminos" />
+            <CheckBox
+                android:id="@+id/chbTerminos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Términos y condiciones"
+                android:textColor="@color/Brown"
+                android:textSize="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/btnRegistroUsu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/GreenMint"
+                android:text="Terminar registro"
+                android:textSize="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

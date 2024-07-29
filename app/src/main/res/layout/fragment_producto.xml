@@ -7,9 +7,7 @@
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".Producto">
-
     <!-- Imagen y nombre del té -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,14 +42,14 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvDescripcion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bordeitem"
+                android:padding="12dp"
                 android:text="Dragon Ball es un té verde artesanal. Es un deleite visual y bastante raro.
 Las hojas se elaboran a mano en bolas que se transforman en flores cuando se sumergen en agua caliente.
-Aroma floral, licor amarillo claro y sabor herbáceo.
-Una bola es suficiente para toda la olla y rinde para 4-5 tazas.
-Se recomienda preparar este té en una tetera de vidrio.
-Tiempo de preparación: 4-5min"
+Aroma floral, licor amarillo claro y sabor herbáceo."
                 android:textColor="@color/Brown" />
         </LinearLayout>
 

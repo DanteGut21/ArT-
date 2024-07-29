@@ -25,10 +25,10 @@
 
             <ImageView
                 android:id="@+id/IUsa"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:layout_marginBottom="40dp"
-                android:src="@drawable/user"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/art"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
