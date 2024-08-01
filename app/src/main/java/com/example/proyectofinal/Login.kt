@@ -33,8 +33,10 @@ class Login : AppCompatActivity() {
         }
 
         val isAdmin = EUsuario.text.toString() == "Admin" && EContraseña.text.toString() == "admin"
-        val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("isAdmin", isAdmin)
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("isAdmin", isAdmin)
+            putExtra("isLogged", true)  // Indicador de que el usuario está logueado
+        }
 
         if (isAdmin) {
             Toast.makeText(this, "Bienvenido Administrador", Toast.LENGTH_SHORT).show()

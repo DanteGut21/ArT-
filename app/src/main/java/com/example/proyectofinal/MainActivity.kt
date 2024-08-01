@@ -30,9 +30,14 @@ class MainActivity : AppCompatActivity() {
 
         // Configura la BottomNavigationView
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
-        // Oculta inicialmente el botón de gestión
+        // Oculta inicialmente el botón de gestión y otros botones hasta verificar el login
         val manageItem = bottomNavigationView.menu.findItem(R.id.navigation_manage)
+        val cartItem = bottomNavigationView.menu.findItem(R.id.navigation_cart)
+        val moreItem = bottomNavigationView.menu.findItem(R.id.navigation_more)
+
         manageItem.isVisible = false  // Ocultar hasta que se verifique el login
+        cartItem.isVisible = false    // Ocultar hasta que se verifique el login
+        moreItem.isVisible = false    // Ocultar hasta que se verifique el login
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -64,14 +69,19 @@ class MainActivity : AppCompatActivity() {
             loadFragment(Principal())
         }
 
-        // Comprobar si es admin al iniciar la actividad
-        checkAdmin()
+        // Comprobar estado de inicio de sesión al iniciar la actividad
+        checkLoginStatus()
     }
 
-    private fun checkAdmin() {
+    private fun checkLoginStatus() {
+        val isLoggedIn = intent.getBooleanExtra("isLogged", false)
         val isAdmin = intent.getBooleanExtra("isAdmin", false)
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
+
+        // Configurar visibilidad basada en el estado de inicio de sesión y administrador
         bottomNavigationView.menu.findItem(R.id.navigation_manage).isVisible = isAdmin
+        bottomNavigationView.menu.findItem(R.id.navigation_cart).isVisible = isLoggedIn
+        bottomNavigationView.menu.findItem(R.id.navigation_more).isVisible = isLoggedIn
     }
 
     private fun loadFragment(fragment: Fragment) {
