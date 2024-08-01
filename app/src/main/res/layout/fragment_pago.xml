@@ -3,46 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#B3000000"
     tools:context=".Pago">
 
+    <!-- LinearLayout centrado para las opciones de pago -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/Beige"
-        android:padding="20dp"
-        android:gravity="center">
+        android:id="@+id/llOpcionesPagos"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/bordeitem"
+        android:orientation="vertical"
+        android:padding="15dp">
 
-        <LinearLayout
+        <Button
+            android:id="@+id/btnPayPal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bordeitem"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="15dp">
+            android:layout_marginTop="50dp"
+            android:text="PayPal"
+            android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-            <Button
-                android:id="@+id/btnPayPal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:text="PayPal" />
-            <Button
-                android:id="@+id/btnBankTransfer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:text="Transferencia Bancaria" />
-            <Button
-                android:id="@+id/btnInStoreDeposit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp"
-                android:text="Depósito en Local" />
+        <Button
+            android:id="@+id/btnBankTransfer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Transferencia Bancaria"
+            android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-        </LinearLayout>
+        <Button
+            android:id="@+id/btnInStoreDeposit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:text="Depósito en Local"
+            android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton" />
     </LinearLayout>
 </FrameLayout>
-
-
-
