@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
-        }
+        }//ViewCompat
 
         val toolbar: Toolbar = findViewById(R.id.tbPrincipal)
         setSupportActionBar(toolbar)
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
         // Comprobar estado de inicio de sesión al iniciar la actividad
         checkLoginStatus()
-    }
+    }//onCreate
 
     private fun checkLoginStatus() {
         val isLoggedIn = intent.getBooleanExtra("isLogged", false)

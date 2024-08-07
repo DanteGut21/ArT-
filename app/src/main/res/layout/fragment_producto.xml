@@ -23,7 +23,7 @@
                 android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:src="@drawable/te" />
+                android:src="@drawable/jazmin" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -40,7 +40,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
             <TextView
                 android:id="@+id/tvDescripcion"
                 android:layout_width="wrap_content"
@@ -76,19 +75,15 @@ Aroma floral, licor amarillo claro y sabor herbáceo."
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="En combo" />
+            android:text="Una pieza" />
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="En piezas" />
+            android:text="Infusor" />
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Presentación artesanal" />
-        <CheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Opción X" />
+            android:text="paquete de 6" />
     </LinearLayout>
 
     <LinearLayout
@@ -104,7 +99,7 @@ Aroma floral, licor amarillo claro y sabor herbáceo."
             android:background="@drawable/bot_cua_greendark"
             android:backgroundTint="@color/GreenDark"
             android:drawableTint="@color/GreenDark"
-            android:text="Pagar pedido"
+            android:text="Pago directo"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
         <Button
@@ -112,10 +107,10 @@ Aroma floral, licor amarillo claro y sabor herbáceo."
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:background="@color/Brown"
-            android:backgroundTint="@color/Brown"
-            android:drawableTint="@color/Brown"
-            android:text="Carrito de compras"
+            android:background="@color/GreenDark"
+            android:backgroundTint="@color/GreenDark"
+            android:drawableTint="@color/GreenDark"
+            android:text="Agregar al carrito"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
     </LinearLayout>

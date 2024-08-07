@@ -64,5 +64,12 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+
+        <!--        <Button-->
+        <!--            android:id="@+id/BTNAgregar"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="AGREGAR">-->
+        <!--        </Button>-->
     </LinearLayout>
 </FrameLayout>

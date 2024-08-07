@@ -9,12 +9,12 @@
     <!-- LinearLayout centrado para las opciones de pago -->
     <LinearLayout
         android:id="@+id/llOpcionesPagos"
-        android:layout_width="350dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/bordeitem"
         android:orientation="vertical"
-        android:padding="15dp">
+        android:padding="20dp">
 
         <Button
             android:id="@+id/btnPayPal"

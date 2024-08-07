@@ -1,24 +1,31 @@
 package com.example.proyectofinal
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.fragment.app.Fragment
 
 class Principal : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
-    }//onCreate
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_principal, container, false)
-    }//onCreateView
+        val view = inflater.inflate(R.layout.fragment_principal, container, false)
 
+        // Inicializa el botón dentro del fragmento
+        val BTNAgregar: Button = view.findViewById(R.id.BTNAgregar)
+
+        // Establece el listener del botón para abrir la actividad Agregar
+        BTNAgregar.setOnClickListener {
+            // Necesitas usar requireActivity() para obtener el contexto de la actividad que contiene el fragmento
+            val intent = Intent(requireActivity(), Agregar::class.java)
+            startActivity(intent)
+        }
+
+        return view
+    }//onCreateView
 }//Class Principal
