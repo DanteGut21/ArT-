@@ -27,7 +27,10 @@ class Tienda : Fragment() {
                 1,
                 "Dragon Ball",
                 "Té Floreciente",
-                "Descripción larga del té Dragon Ball.",
+                "Como equilibrista en la cuerda floja, aparece un crisantemo rosa " +
+                        "suspendido en un arco de jazmines. Una flor de caléndula espera ansiosa " +
+                        "recibirlo por si no puede evitar caer. Cada perla está formada por hojas de" +
+                        " Té atadas a mano con algodón, con flores naturales ocultas en su interior.",
                 100.0,
                 10,
                 R.drawable.dragonball

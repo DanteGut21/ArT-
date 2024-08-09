@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                     loadFragment(Principal())
                     true
                 }
-                R.id.navigation_profile -> {
+                R.id.navigation_store -> {
                     loadFragment(Tienda())
                     true
                 }
@@ -78,11 +78,15 @@ class MainActivity : AppCompatActivity() {
         val isAdmin = intent.getBooleanExtra("isAdmin", false)
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
 
-        // Configurar visibilidad basada en el estado de inicio de sesión y administrador
+        // El ítem de administración solo es visible para administradores.
         bottomNavigationView.menu.findItem(R.id.navigation_manage).isVisible = isAdmin
-        bottomNavigationView.menu.findItem(R.id.navigation_cart).isVisible = isLoggedIn
-        bottomNavigationView.menu.findItem(R.id.navigation_more).isVisible = isLoggedIn
+        bottomNavigationView.menu.findItem(R.id.navigation_store).isVisible = !isAdmin
+
+        // El ítem del carrito y más opciones solo son visibles para usuarios logueados que no sean administradores.
+        bottomNavigationView.menu.findItem(R.id.navigation_cart).isVisible = isLoggedIn && !isAdmin
+        bottomNavigationView.menu.findItem(R.id.navigation_more).isVisible = isLoggedIn && !isAdmin
     }
+
 
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
