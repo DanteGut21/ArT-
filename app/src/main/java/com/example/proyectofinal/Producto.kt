@@ -1,40 +1,44 @@
 package com.example.proyectofinal
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
 class Producto : Fragment() {
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_producto, container, false)
+
+        arguments?.let { bundle ->
+            val name = bundle.getString("productName")
+            val description = bundle.getString("productDescription")
+            val imageResId = bundle.getInt("productImageResId")
+
+            view.findViewById<TextView>(R.id.productName).text = name
+            view.findViewById<TextView>(R.id.productDescription).text = description
+            view.findViewById<ImageView>(R.id.productImage).setImageResource(imageResId)
+        }//arguments
+
         val btnPago: Button = view.findViewById(R.id.btnPago)
         val btnCarrito: Button = view.findViewById(R.id.btnCarrito)
         btnPago.setOnClickListener {
             Toast.makeText(context, "Preparando opciones de pago...", Toast.LENGTH_SHORT).show()
-
-            // Creando una instancia del fragmento de pago
             val pagoFragment = Pago()
-
-            // Realizando la transacción para añadir el fragmento de pago sobre el fragmento actual
             parentFragmentManager.beginTransaction()
                 .add(R.id.fragment_container, pagoFragment)
-                .addToBackStack(null) // Permite al usuario volver al fragmento anterior
+                .addToBackStack(null)
                 .commit()
-        }
+        }//btnPago
         btnCarrito.setOnClickListener {
             Toast.makeText(context, "Carrito", Toast.LENGTH_SHORT).show()
-//            val intent = Intent(this, Carrito::class.java)
-//            startActivity(intent)
-        }
+        }//btnCarrito
         return view
-    }//OnCreateView
+    }//onCreateView
 }//Class Producto

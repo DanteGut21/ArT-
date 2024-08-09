@@ -22,32 +22,14 @@
             android:paddingBottom="8dp"/>
 
         <GridLayout
+            android:id="@+id/gridLayoutProductos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="4"
-            android:rowCount="1"
+            android:columnCount="3"
+            android:rowCount="5"
             android:background="@drawable/bordeitem2"
             android:padding="8dp">
             <!-- Repetir para cada producto -->
-            <LinearLayout
-                android:id="@+id/ItemTienda"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="8dp">
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/te"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nombre Té"
-                    android:gravity="center"
-                    android:textSize="14sp"/>
-            </LinearLayout>
             <!-- Repetir hasta completar los productos -->
         </GridLayout>
 
