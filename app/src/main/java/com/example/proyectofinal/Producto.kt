@@ -19,10 +19,15 @@ class Producto : Fragment() {
         arguments?.let { bundle ->
             val name = bundle.getString("productName")
             val description = bundle.getString("productDescription")
+            val category = bundle.getString("productCategory")
+            val price = bundle.getDouble("productPrice", 0.0)
             val imageResId = bundle.getInt("productImageResId")
 
             view.findViewById<TextView>(R.id.productName).text = name
             view.findViewById<TextView>(R.id.productDescription).text = description
+            view.findViewById<TextView>(R.id.productCategory).text = category
+            view.findViewById<TextView>(R.id.productPrice).text =
+                getString(R.string.price_format, price)
             view.findViewById<ImageView>(R.id.productImage).setImageResource(imageResId)
         }//arguments
 

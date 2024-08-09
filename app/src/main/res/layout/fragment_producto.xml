@@ -15,7 +15,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="4dp">
             <ImageView
                 android:id="@+id/productImage"
                 android:layout_width="100dp"
@@ -23,16 +24,42 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/jazmin" />
-            <TextView
-                android:id="@+id/productName"
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingStart="24dp"
-                android:text="Nombre del té"
-                android:textColor="@color/GreenMint"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/productName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="24dp"
+                    android:text="Nombre del té"
+                    android:textColor="@color/GreenMint"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/productPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="24dp"
+                    android:text="Precio"
+                    android:textColor="@color/GreenLeave"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/productCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="24dp"
+                    android:text="Categoria"
+                    android:textColor="@color/Brown"
+                    android:textSize="18sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
