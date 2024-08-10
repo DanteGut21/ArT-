@@ -10,28 +10,42 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import database.DatabaseHelper
 
 class Producto : Fragment() {
+    private lateinit var databaseHelper: DatabaseHelper
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_producto, container, false)
+        databaseHelper = DatabaseHelper(requireContext())
 
-        arguments?.let { bundle ->
-            val name = bundle.getString("productName")
-            val description = bundle.getString("productDescription")
-            val category = bundle.getString("productCategory")
-            val price = bundle.getDouble("productPrice", 0.0)
-            val imageResId = bundle.getInt("productImageResId")
+        try {
+            arguments?.let { bundle ->
+                val productId = bundle.getInt("productId")
+                val product =
+                    databaseHelper.getProduct(productId) // Método para obtener un producto por ID
 
-            view.findViewById<TextView>(R.id.productName).text = name
-            view.findViewById<TextView>(R.id.productDescription).text = description
-            view.findViewById<TextView>(R.id.productCategory).text = category
-            view.findViewById<TextView>(R.id.productPrice).text =
-                getString(R.string.price_format, price)
-            view.findViewById<ImageView>(R.id.productImage).setImageResource(imageResId)
-        }//arguments
+                product?.let {
+                    view.findViewById<TextView>(R.id.productName).text = it.name
+                    view.findViewById<TextView>(R.id.productDescription).text = it.description
+                    view.findViewById<TextView>(R.id.productCategory).text = it.category
+                    view.findViewById<TextView>(R.id.productPrice).text =
+                        getString(R.string.price_format, it.price)
+                    val imageResId =
+                        resources.getIdentifier(it.imageResId, "drawable", context?.packageName)
+                    view.findViewById<ImageView>(R.id.productImage).setImageResource(imageResId)
+                }
+            }
+        } catch (e: Exception) {
+            Toast.makeText(
+                context,
+                "Error al abrir detalles del producto: ${e.localizedMessage}",
+                Toast.LENGTH_LONG
+            ).show()
+        }
 
         val btnPago: Button = view.findViewById(R.id.btnPago)
         val btnCarrito: Button = view.findViewById(R.id.btnCarrito)
@@ -55,6 +69,7 @@ class Producto : Fragment() {
                 startActivity(Intent(activity, Login::class.java))
             }
         }//btnCarrito
+
         return view
-    }//onCreateView
+    }//OnCreate
 }//Class Producto

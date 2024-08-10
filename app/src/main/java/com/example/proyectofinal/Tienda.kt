@@ -18,9 +18,8 @@ class Tienda : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        databaseHelper =
-            DatabaseHelper(context)  // Se inicializa aquí para garantizar que esté listo antes de onCreateView.
-    }
+        databaseHelper = DatabaseHelper(context)
+    }//OnAttach
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,51 +29,48 @@ class Tienda : Fragment() {
         val gridLayout: GridLayout = view.findViewById(R.id.gridLayoutProductos)
 
         try {
-            val productos =
-                databaseHelper.getAllProducts()  // Obtener los productos desde la base de datos.
+            val productos = databaseHelper.getAllProducts()
             productos.forEach { producto ->
                 val itemView = inflater.inflate(R.layout.item_producto, gridLayout, false)
                 val imageView: ImageView = itemView.findViewById(R.id.imageProducto)
                 val textView: TextView = itemView.findViewById(R.id.textProductoNombre)
-
                 val imageId =
                     resources.getIdentifier(producto.imageResId, "drawable", context?.packageName)
+
                 imageView.setImageResource(imageId)
                 textView.text = producto.name
 
                 itemView.setOnClickListener {
                     openProductDetails(producto)
                 }
-
                 gridLayout.addView(itemView)
             }
         } catch (e: Exception) {
             Toast.makeText(context, "Error al cargar productos: ${e.message}", Toast.LENGTH_LONG)
                 .show()
-            e.printStackTrace()
         }
-
         return view
-    }
+    }//OnCreate
 
     private fun openProductDetails(producto: Product) {
-        val productoFragment = Producto().apply {
-            arguments = Bundle().apply {
-                putInt("productId", producto.id)
-                putString("productName", producto.name)
-                putString("productDescription", producto.description)
-                putDouble("productPrice", producto.price)
-                putString("productCategory", producto.category)
-                putInt("productStock", producto.stock)
-                putInt(
-                    "productImageResId",
-                    resources.getIdentifier(producto.imageResId, "drawable", context?.packageName)
-                )
+        try {
+            val productoFragment = Producto().apply {
+                arguments = Bundle().apply {
+                    putInt("productId", producto.id)
+                    putString("productName", producto.name)
+                    putString("productDescription", producto.description)
+                    putDouble("productPrice", producto.price)
+                    putString("productCategory", producto.category)
+                    putInt("productStock", producto.stock)
+                    putString("productImageResId", producto.imageResId)
+                }
             }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, productoFragment)
+                .addToBackStack(null)
+                .commit()
+        } catch (e: Exception) {
+            Toast.makeText(context, "Error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
         }
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, productoFragment)
-            .addToBackStack(null)
-            .commit()
-    }
+    }//openProductDetails
 }//Class Tienda

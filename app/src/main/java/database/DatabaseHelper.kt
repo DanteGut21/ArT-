@@ -272,4 +272,34 @@ class DatabaseHelper(context: Context) :
         db.execSQL("DROP TABLE IF EXISTS productos")
         onCreate(db)
     }
+
+    // Método para obtener un producto por ID
+    fun getProduct(productId: Int): Product? {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "productos",  // Nombre de la tabla
+            null,         // Todas las columnas
+            "id = ?",     // Cláusula WHERE
+            arrayOf(productId.toString()),  // Valores para la cláusula WHERE
+            null,         // groupBy
+            null,         // having
+            null          // orderBy
+        )
+        var product: Product? = null
+        if (cursor.moveToFirst()) {
+            product = Product(
+                id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                name = cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                description = cursor.getString(cursor.getColumnIndexOrThrow("description")),
+                category = cursor.getString(cursor.getColumnIndexOrThrow("category")),
+                price = cursor.getDouble(cursor.getColumnIndexOrThrow("price")),
+                stock = cursor.getInt(cursor.getColumnIndexOrThrow("stock")),
+                imageResId = cursor.getString(cursor.getColumnIndexOrThrow("image"))
+            )
+        }
+        cursor.close()
+        db.close()
+        return product
+    }
+
 }
