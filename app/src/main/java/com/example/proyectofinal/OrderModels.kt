@@ -10,13 +10,3 @@ data class Order(
     val items: List<Item>,
     val status: String
 )
-
-//data class Product(
-//    val id: Int,
-//    val name: String,
-//    val short_description: String?,
-//    val long_description: String?,
-//    val price: Double,
-//    val stock: Int,
-//    val imageResId: Int?
-//)

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -122,6 +123,10 @@ class MainActivity : AppCompatActivity() {
             R.id.action_login -> {
                 val intent = Intent(this, Login::class.java)
                 startActivity(intent)
+                true
+            }
+            R.id.iconNotifi -> {
+                Toast.makeText(this, "Bienvenido a ArTé", Toast.LENGTH_SHORT).show()
                 true
             }
             else -> super.onOptionsItemSelected(item)

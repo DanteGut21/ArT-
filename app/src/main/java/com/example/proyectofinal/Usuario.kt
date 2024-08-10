@@ -1,5 +1,6 @@
 package com.example.proyectofinal
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ class Usuario : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_usuario, container, false)
         val btnEnvio: Button = view.findViewById(R.id.btnEnvio)
+        val btnfactura: Button = view.findViewById(R.id.btnfactura)
 
         btnEnvio.setOnClickListener {
             // Aquí manejarías el pago por transferencia bancaria
@@ -31,7 +33,25 @@ class Usuario : Fragment() {
             transaction.addToBackStack(null)
             transaction.commit()
         }
+        btnfactura.setOnClickListener({
+            showAlertDialog()
+        })
         return view
     }//OnCreateView
+
+    private fun showAlertDialog() {
+        val builder =
+            AlertDialog.Builder(requireContext()) // use requireContext() to get the context
+        builder.setTitle("Facturación")
+        builder.setMessage("Para emitir su factura favor de mandar correo a la siguiente dirección \n factura@arte.com")
+        builder.setPositiveButton("Aceptar") { dialog, which ->
+            Toast.makeText(context, "Aceptado", Toast.LENGTH_SHORT).show()
+        }
+        builder.setNegativeButton("Cancelar") { dialog, which ->
+            dialog.dismiss()
+        }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
 
 }//Class usuario
