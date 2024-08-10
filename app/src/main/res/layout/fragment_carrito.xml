@@ -7,6 +7,14 @@
     android:orientation="vertical"
     tools:context=".Carrito">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="10dp"></androidx.recyclerview.widget.RecyclerView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,25 +36,18 @@
             android:layout_margin="18dp"
             android:backgroundTint="@color/GreenLeave"
             android:textColor="@color/Brown"
-            android:padding="12dp"
             android:textSize="16sp"
             android:text="Proceder con el pago" />
-        <CheckBox
-            android:id="@+id/cbRegalo"
+
+        <Button
+            android:id="@+id/btnPEliminar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="Enviar como regalo"
+            android:layout_margin="18dp"
+            android:backgroundTint="@color/GreenLeave"
             android:textColor="@color/Brown"
-            android:paddingBottom="16dp"/>
+            android:text="Eliminar productos"
+            android:textSize="16sp" />
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:padding="10dp"></androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

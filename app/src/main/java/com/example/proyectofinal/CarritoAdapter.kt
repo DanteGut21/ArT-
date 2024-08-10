@@ -46,5 +46,11 @@ class CarritoAdapter(private var items: List<CarritoItem>) :
                 // Decrementar lógica aquí
             }
         }
+
+    }//class CartViewHolder
+
+    fun updateItems(newItems: List<CarritoItem>) {
+        items = newItems
+        notifyDataSetChanged()
     }
-}
+}//Class CarritoAdapter

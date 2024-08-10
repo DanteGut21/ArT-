@@ -14,6 +14,18 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
+
+    companion object {
+        const val IS_LOGGED_IN = "isLoggedIn"
+    }
+
+    var isLoggedIn: Boolean
+        get() = getSharedPreferences("prefs", MODE_PRIVATE).getBoolean(IS_LOGGED_IN, false)
+        set(value) {
+            getSharedPreferences("prefs", MODE_PRIVATE).edit().putBoolean(IS_LOGGED_IN, value)
+                .apply()
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -71,7 +83,13 @@ class MainActivity : AppCompatActivity() {
 
         // Comprobar estado de inicio de sesión al iniciar la actividad
         checkLoginStatus()
+
+        isLoggedIn = intent.getBooleanExtra("isLogged", false)
     }//onCreate
+
+    fun checkSession(): Boolean {
+        return isLoggedIn
+    }
 
     private fun checkLoginStatus() {
         val isLoggedIn = intent.getBooleanExtra("isLogged", false)

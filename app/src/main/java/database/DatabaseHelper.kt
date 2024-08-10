@@ -52,8 +52,8 @@ class DatabaseHelper(context: Context) :
         // Inserciones predefinidas con INSERT OR IGNORE para evitar duplicados
         db.execSQL(
             "INSERT OR IGNORE INTO users (username, email, password, role) VALUES " +
-                    "('admin', 'admin@example.com', 'adminpassword', 'admin')," +
-                    "('usernormal', 'usernormal@example.com', 'userpassword', 'usernormal');"
+                    "('admin', 'admin@example.com', 'admin', 'admin')," +
+                    "('usernormal', 'usernormal@example.com', '12345', 'usernormal');"
         )
 
         db.execSQL(

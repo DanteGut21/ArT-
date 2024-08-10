@@ -1,4 +1,6 @@
 package com.example.proyectofinal
+
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -42,7 +44,16 @@ class Producto : Fragment() {
                 .commit()
         }//btnPago
         btnCarrito.setOnClickListener {
-            Toast.makeText(context, "Carrito", Toast.LENGTH_SHORT).show()
+            if ((activity as MainActivity).checkSession()) {
+                Toast.makeText(context, "Producto añadido al carrito", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    context,
+                    "Por favor, inicia sesión para continuar.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                startActivity(Intent(activity, Login::class.java))
+            }
         }//btnCarrito
         return view
     }//onCreateView
