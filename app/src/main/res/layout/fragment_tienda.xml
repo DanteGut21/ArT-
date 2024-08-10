@@ -33,46 +33,45 @@
                 android:columnCount="3"
                 android:padding="8dp"></GridLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="16dp"
-                android:paddingBottom="8dp"
-                android:text="Anteriormente pedidos"
-                android:textColor="@color/Brown"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+            <!--            <TextView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:paddingTop="16dp"-->
+            <!--                android:paddingBottom="8dp"-->
+            <!--                android:text="Anteriormente pedidos"-->
+            <!--                android:textColor="@color/Brown"-->
+            <!--                android:textSize="20dp"-->
+            <!--                android:textStyle="bold" />-->
+            <!--            <GridLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:background="@drawable/bordeitem2"-->
+            <!--                android:columnCount="4"-->
+            <!--                android:padding="8dp"-->
+            <!--                android:rowCount="1">-->
 
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bordeitem2"
-                android:columnCount="4"
-                android:padding="8dp"
-                android:rowCount="1">
+            <!--                &lt;!&ndash; Repetir para cada pedido &ndash;&gt;-->
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:gravity="center"-->
+            <!--                    android:orientation="vertical"-->
+            <!--                    android:padding="8dp">-->
 
-                <!-- Repetir para cada pedido -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="8dp">
+            <!--                    <ImageView-->
+            <!--                        android:layout_width="80dp"-->
+            <!--                        android:layout_height="80dp"-->
+            <!--                        android:layout_gravity="center"-->
+            <!--                        android:src="@drawable/te" />-->
 
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/te" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Nombre Té"
-                        android:textSize="14sp" />
-                </LinearLayout>
-            </GridLayout>
+            <!--                    <TextView-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:gravity="center"-->
+            <!--                        android:text="Nombre Té"-->
+            <!--                        android:textSize="14sp" />-->
+            <!--                </LinearLayout>-->
+            <!--            </GridLayout>-->
 
         </LinearLayout>
     </ScrollView>
