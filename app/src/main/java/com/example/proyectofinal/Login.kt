@@ -8,10 +8,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import database.DatabaseHelper
+import java.util.Locale
 
 class Login : AppCompatActivity() {
     lateinit var EUsuario: EditText
     lateinit var EContraseña: EditText
+    private lateinit var databaseHelper: DatabaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,36 +25,44 @@ class Login : AppCompatActivity() {
             insets
         }
 
+        databaseHelper = DatabaseHelper(this)
         EUsuario = findViewById(R.id.edtUsuario)
         EContraseña = findViewById(R.id.edtpPassword)
     }
 
     fun principal(vista: View) {
-        if (EUsuario.text.isEmpty() || EContraseña.text.isEmpty()) {
-            Toast.makeText(this, "Usuario o contraseña no válidos.", Toast.LENGTH_SHORT).show()
+        val usuario = EUsuario.text.toString()
+        val contraseña = EContraseña.text.toString()
+
+        if (usuario.isEmpty() || contraseña.isEmpty()) {
+            Toast.makeText(this, "Favor de llenar ambos campos", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val isAdmin = EUsuario.text.toString() == "Admin" && EContraseña.text.toString() == "admin"
-        val intent = Intent(this, MainActivity::class.java).apply {
-            putExtra("isAdmin", isAdmin)
-            putExtra("isLogged", true)  // Indicador de que el usuario está logueado
-        }
+        val user = databaseHelper.getUser(usuario, contraseña)
+        if (user != null) {
+            val intent = Intent(this, MainActivity::class.java).apply {
+                putExtra("isAdmin", user.tipoUsuario == "admin")
+                putExtra("isLogged", true)  // Indicador de que el usuario está logueado
+            }
 
-        if (isAdmin) {
-            Toast.makeText(this, "Bienvenido Administrador", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Bienvenido ${user.tipoUsuario.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            }}", Toast.LENGTH_SHORT)
+                .show()
+            startActivity(intent)
+            finish()
         } else {
-            Toast.makeText(this, "Bienvenido Usuario", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Usuario o contraseña incorrectos.", Toast.LENGTH_SHORT).show()
         }
-
-        startActivity(intent)
-        finish()
-    }//Principal
+    }
 
     fun Registro(vista: View) {
         val intent = Intent(this, Registro::class.java)
         startActivity(intent)
         finish()
         true
-    }//Registro
-}//Class login
+    }
+}

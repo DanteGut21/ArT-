@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.example.proyectofinal.model.Product
+import com.example.proyectofinal.model.Usuario
 
 class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -30,9 +31,23 @@ class DatabaseHelper(context: Context) :
             );
         """
         )
+
+        // Crear tabla de usuarios
+        db.execSQL(
+            """
+            CREATE TABLE usuarios (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nombre TEXT NOT NULL UNIQUE,
+                apellido TEXT NOT NULL,
+                correo TEXT NOT NULL,
+                contrasena TEXT NOT NULL,
+                tipo_usuario TEXT DEFAULT 'usuario'
+            );
+        """
+        )
         Log.d("DatabaseOperation", "Database created successfully")
         initializeDatabase(db)
-    }
+    }//OnCreate
 
     private fun initializeDatabase(db: SQLiteDatabase) {
         val products = listOf(
@@ -228,7 +243,26 @@ class DatabaseHelper(context: Context) :
                 db.insert("productos", null, values)
             }
         }
-    }
+
+        val users = listOf(
+            ContentValues().apply {
+                put("nombre", "Admin")
+                put("apellido", "User")
+                put("correo", "admin@arte.com")
+                put("contrasena", "admin")
+                put("tipo_usuario", "admin")
+            },
+            ContentValues().apply {
+                put("nombre", "User")
+                put("apellido", "User")
+                put("correo", "user@example.com")
+                put("contrasena", "user123")
+            }
+        )
+        users.forEach { values ->
+            db.insert("usuarios", null, values)
+        }
+    }//initializeDatabase
 
     fun getAllProducts(): List<Product> {
         val productList = mutableListOf<Product>()
@@ -265,13 +299,12 @@ class DatabaseHelper(context: Context) :
             db.close()
         }
         return productList
-    }
-
-
+    }//getAllProducts
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS productos")
+        db.execSQL("DROP TABLE IF EXISTS usuarios")
         onCreate(db)
-    }
+    }//onUpgrade
 
     // Método para obtener un producto por ID
     fun getProduct(productId: Int): Product? {
@@ -300,6 +333,73 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         db.close()
         return product
-    }
+    }//getProduct
 
+    fun insertUser(nombre: String, apellido: String, correo: String, contrasena: String): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("nombre", nombre)
+            put("apellido", apellido)
+            put("correo", correo)
+            put("contrasena", contrasena)
+        }
+        val userId = db.insert("usuarios", null, values)
+        db.close()
+        return userId
+    }//insertUser
+
+    fun getUser(correo: String, contrasena: String): Usuario? {
+        val db = readableDatabase
+        val cursor = db.query(
+            "usuarios",
+            null,
+            "correo = ? AND contrasena = ?",
+            arrayOf(correo, contrasena),
+            null,
+            null,
+            null
+        )
+
+        var user: Usuario? = null
+        if (cursor.moveToFirst()) {
+            user = Usuario(
+                id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
+                apellido = cursor.getString(cursor.getColumnIndexOrThrow("apellido")),
+                correo = cursor.getString(cursor.getColumnIndexOrThrow("correo")),
+                contrasena = cursor.getString(cursor.getColumnIndexOrThrow("contrasena")),
+                tipoUsuario = cursor.getString(cursor.getColumnIndexOrThrow("tipo_usuario"))
+            )
+        }
+        cursor.close()
+        db.close()
+        return user
+    }//getUser
+
+    fun getUserById(email: String, password: String): Usuario? {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "usuarios",  // Nombre de la tabla
+            null,  // Todas las columnas
+            "correo = ? AND contrasena = ?",  // Cláusula WHERE
+            arrayOf(email, password),  // Valores para la cláusula WHERE
+            null,  // groupBy
+            null,  // having
+            null   // orderBy
+        )
+        var user: Usuario? = null
+        if (cursor.moveToFirst()) {
+            user = Usuario(
+                id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
+                apellido = cursor.getString(cursor.getColumnIndexOrThrow("apellido")),
+                correo = cursor.getString(cursor.getColumnIndexOrThrow("correo")),
+                contrasena = cursor.getString(cursor.getColumnIndexOrThrow("contrasena")),
+                tipoUsuario = cursor.getString(cursor.getColumnIndexOrThrow("tipo_usuario"))
+            )
+        }
+        cursor.close()
+        db.close()
+        return user
+    }//getUserById
 }
