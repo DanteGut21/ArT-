@@ -5,53 +5,66 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.example.proyectofinal.model.Usuario
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import database.DatabaseHelper
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var databaseHelper: DatabaseHelper
+    private var currentUser: Usuario? = null
 
     companion object {
-        const val IS_LOGGED_IN = "isLoggedIn"
+        private const val REQUEST_LOGIN = 1001  // Identificador único para la solicitud de login
     }
-
-    var isLoggedIn: Boolean
-        get() = getSharedPreferences("prefs", MODE_PRIVATE).getBoolean(IS_LOGGED_IN, false)
-        set(value) {
-            getSharedPreferences("prefs", MODE_PRIVATE).edit().putBoolean(IS_LOGGED_IN, value)
-                .apply()
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }//ViewCompat
+        databaseHelper = DatabaseHelper(this)
+        setupViews()
 
+        try {
+            val email = intent.getStringExtra("userEmail") ?: ""
+            val password = intent.getStringExtra("userPassword") ?: ""
+            currentUser = databaseHelper.getUserById(email, password)
+            updateNavigationVisibility()
+        } catch (e: Exception) {
+            Toast.makeText(
+                this,
+                "Error al cargar datos del usuario: ${e.message}",
+                Toast.LENGTH_LONG
+            ).show()
+            e.printStackTrace()
+        }
+
+        if (savedInstanceState == null) {
+            loadFragment(Principal())  // Carga el fragmento principal solo si no se ha guardado ningún estado
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_LOGIN && resultCode == RESULT_OK) {
+            data?.let {
+                val email = it.getStringExtra("userEmail") ?: ""
+                val password = it.getStringExtra("userPassword") ?: ""
+                currentUser = databaseHelper.getUserById(email, password)
+                updateNavigationVisibility()
+                loadFragment(Principal())  // Carga el fragmento principal basado en el usuario logueado
+            }
+        }
+    }
+
+    private fun setupViews() {
         val toolbar: Toolbar = findViewById(R.id.tbPrincipal)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        // Configura la BottomNavigationView
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
-        // Oculta inicialmente el botón de gestión y otros botones hasta verificar el login
-        val manageItem = bottomNavigationView.menu.findItem(R.id.navigation_manage)
-        val cartItem = bottomNavigationView.menu.findItem(R.id.navigation_cart)
-        val moreItem = bottomNavigationView.menu.findItem(R.id.navigation_more)
-
-        manageItem.isVisible = false  // Ocultar hasta que se verifique el login
-        cartItem.isVisible = false    // Ocultar hasta que se verifique el login
-        moreItem.isVisible = false    // Ocultar hasta que se verifique el login
-
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
@@ -63,49 +76,49 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_cart -> {
-                    loadFragment(Carrito())
-                    true
+                    if (currentUser?.tipoUsuario != "admin") {
+                        loadFragment(Carrito())
+                        true
+                    } else false
                 }
                 R.id.navigation_more -> {
                     loadFragment(Usuario())
                     true
                 }
                 R.id.navigation_manage -> {
-                    loadFragment(GestionP())
-                    true
+                    if (currentUser?.tipoUsuario == "admin") {
+                        loadFragment(GestionP())
+                        true
+                    } else false
                 }
                 else -> false
             }
         }
-
-        if (savedInstanceState == null) {
-            loadFragment(Principal())
-        }
-
-        // Comprobar estado de inicio de sesión al iniciar la actividad
-        checkLoginStatus()
-
-        isLoggedIn = intent.getBooleanExtra("isLogged", false)
-    }//onCreate
-
-    fun checkSession(): Boolean {
-        return isLoggedIn
     }
 
-    private fun checkLoginStatus() {
-        val isLoggedIn = intent.getBooleanExtra("isLogged", false)
-        val isAdmin = intent.getBooleanExtra("isAdmin", false)
+    private fun updateNavigationVisibility() {
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        val manageItem = bottomNavigationView.menu.findItem(R.id.navigation_manage)
+        val storeItem = bottomNavigationView.menu.findItem(R.id.navigation_store)
+        val cartItem = bottomNavigationView.menu.findItem(R.id.navigation_cart)
+        val moreItem = bottomNavigationView.menu.findItem(R.id.navigation_more)
 
-        // El ítem de administración solo es visible para administradores.
-        bottomNavigationView.menu.findItem(R.id.navigation_manage).isVisible = isAdmin
-        bottomNavigationView.menu.findItem(R.id.navigation_store).isVisible = !isAdmin
-
-        // El ítem del carrito y más opciones solo son visibles para usuarios logueados que no sean administradores.
-        bottomNavigationView.menu.findItem(R.id.navigation_cart).isVisible = isLoggedIn && !isAdmin
-        bottomNavigationView.menu.findItem(R.id.navigation_more).isVisible = isLoggedIn && !isAdmin
+        if (currentUser?.tipoUsuario == "admin") {
+            manageItem.isVisible = true
+            storeItem.isVisible = false
+            cartItem.isVisible = false
+            moreItem.isVisible = false
+        } else if (currentUser?.tipoUsuario == "usuario") {
+            manageItem.isVisible = false
+            storeItem.isVisible = true
+            cartItem.isVisible = true
+            moreItem.isVisible = true
+        } else {
+            manageItem.isVisible = false
+            cartItem.isVisible = false
+            moreItem.isVisible = false
+        }
     }
-
 
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
@@ -122,7 +135,7 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_login -> {
                 val intent = Intent(this, Login::class.java)
-                startActivity(intent)
+                startActivityForResult(intent, REQUEST_LOGIN)
                 true
             }
             R.id.iconNotifi -> {

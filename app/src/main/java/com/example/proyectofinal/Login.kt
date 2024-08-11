@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import database.DatabaseHelper
-import java.util.Locale
 
 class Login : AppCompatActivity() {
     lateinit var EUsuario: EditText
@@ -42,22 +41,18 @@ class Login : AppCompatActivity() {
         val user = databaseHelper.getUser(usuario, contraseña)
         if (user != null) {
             val intent = Intent(this, MainActivity::class.java).apply {
-                putExtra("isAdmin", user.tipoUsuario == "admin")
-                putExtra("isLogged", true)  // Indicador de que el usuario está logueado
+                putExtra("userEmail", user.correo)  // Pasa el correo electrónico del usuario
+                putExtra(
+                    "userPassword",
+                    user.contrasena
+                )  // Pasa la contraseña para verificar en MainActivity
             }
-
-            Toast.makeText(this, "Bienvenido ${user.tipoUsuario.replaceFirstChar {
-                if (it.isLowerCase()) it.titlecase(
-                    Locale.getDefault()
-                ) else it.toString()
-            }}", Toast.LENGTH_SHORT)
-                .show()
-            startActivity(intent)
-            finish()
+            setResult(RESULT_OK, intent)  // Establece el resultado como OK y adjunta el intent
+            finish()  // Cierra LoginActivity
         } else {
             Toast.makeText(this, "Usuario o contraseña incorrectos.", Toast.LENGTH_SHORT).show()
         }
-    }
+    } //Principal
 
     fun Registro(vista: View) {
         val intent = Intent(this, Registro::class.java)

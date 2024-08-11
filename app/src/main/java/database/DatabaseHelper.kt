@@ -2,6 +2,7 @@ package database
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
@@ -378,28 +379,34 @@ class DatabaseHelper(context: Context) :
 
     fun getUserById(email: String, password: String): Usuario? {
         val db = this.readableDatabase
-        val cursor = db.query(
-            "usuarios",  // Nombre de la tabla
-            null,  // Todas las columnas
-            "correo = ? AND contrasena = ?",  // Cláusula WHERE
-            arrayOf(email, password),  // Valores para la cláusula WHERE
-            null,  // groupBy
-            null,  // having
-            null   // orderBy
-        )
-        var user: Usuario? = null
-        if (cursor.moveToFirst()) {
-            user = Usuario(
-                id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
-                nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
-                apellido = cursor.getString(cursor.getColumnIndexOrThrow("apellido")),
-                correo = cursor.getString(cursor.getColumnIndexOrThrow("correo")),
-                contrasena = cursor.getString(cursor.getColumnIndexOrThrow("contrasena")),
-                tipoUsuario = cursor.getString(cursor.getColumnIndexOrThrow("tipo_usuario"))
+        var cursor: Cursor? = null
+        try {
+            cursor = db.query(
+                "usuarios",  // Nombre de la tabla
+                null,  // Todas las columnas
+                "correo = ? AND contrasena = ?",  // Cláusula WHERE
+                arrayOf(email, password),  // Valores para la cláusula WHERE
+                null,  // groupBy
+                null,  // having
+                null   // orderBy
             )
+            if (cursor.moveToFirst()) {
+                return Usuario(
+                    id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                    nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
+                    apellido = cursor.getString(cursor.getColumnIndexOrThrow("apellido")),
+                    correo = cursor.getString(cursor.getColumnIndexOrThrow("correo")),
+                    contrasena = cursor.getString(cursor.getColumnIndexOrThrow("contrasena")),
+                    tipoUsuario = cursor.getString(cursor.getColumnIndexOrThrow("tipo_usuario"))
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("DatabaseHelper", "Error accessing database: ${e.localizedMessage}")
+            e.printStackTrace()
+        } finally {
+            cursor?.close()
+            db.close()
         }
-        cursor.close()
-        db.close()
-        return user
+        return null
     }//getUserById
-}
+}//DatabaseHelper
