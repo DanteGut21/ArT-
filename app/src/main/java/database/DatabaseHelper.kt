@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import com.example.proyectofinal.model.CartItem
 import com.example.proyectofinal.model.Product
 import com.example.proyectofinal.model.Usuario
 
@@ -65,9 +66,11 @@ class DatabaseHelper(context: Context) :
         CREATE TABLE ordenes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             id_cliente INTEGER,
+            id_compra INTEGER,
             fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
             estado TEXT CHECK(estado IN ('Pendiente', 'Completa', 'Cancelada')) DEFAULT 'Pendiente',
-            FOREIGN KEY (id_cliente) REFERENCES usuarios(id)
+            FOREIGN KEY (id_cliente) REFERENCES usuarios(id),
+            FOREIGN KEY (id_compra) REFERENCES carrito(id)
         );
     """
         )
@@ -401,6 +404,26 @@ class DatabaseHelper(context: Context) :
         return user
     }//getUser
 
+    fun getProductStock(productId: Int): Int {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "productos",
+            arrayOf("stock"),
+            "id = ?",
+            arrayOf(productId.toString()),
+            null,
+            null,
+            null
+        )
+        var stock = 0
+        if (cursor.moveToFirst()) {
+            stock = cursor.getInt(cursor.getColumnIndexOrThrow("stock"))
+        }
+        cursor.close()
+        db.close()
+        return stock
+    }//getProductStock
+
     fun getUserById(userId: Int): Usuario? {
         val db = this.readableDatabase
         var cursor: Cursor? = null
@@ -431,68 +454,100 @@ class DatabaseHelper(context: Context) :
         return null
     }//getUserById
 
+
     fun addToCart(productId: Int, userId: Int, cantidad: Int) {
         val db = this.writableDatabase
-        db.beginTransaction() // Usar transacciones para garantizar la integridad de la data
-        try {
-            // Actualizar el stock del producto
-            val newStock = getProductStock(productId) - cantidad
-            if (newStock >= 0) { // Solo proceder si hay suficiente stock
-                val stockValues = ContentValues()
-                stockValues.put("stock", newStock)
-                db.update("productos", stockValues, "id = ?", arrayOf(productId.toString()))
+        val values = ContentValues().apply {
+            put("id_producto", productId)
+            put("id_cliente", userId)
+            put("cantidad", cantidad)
+            put("estado_producto", "Pendiente")
+        }
+        db.insert("carrito", null, values)
+        db.close()
+    }//addToCart
 
-                // Añadir al carrito
-                val values = ContentValues().apply {
-                    put("id_producto", productId)
-                    put("id_cliente", userId)
-                    put("cantidad", cantidad)
-                }
-                db.insertOrThrow("carrito", null, values)
-                db.setTransactionSuccessful() // Marcar la transacción como exitosa
-            } else {
-                throw Exception("No hay suficiente stock disponible")
-            }
+    fun getCartProducts(userId: Int): MutableList<CartItem> {
+        val db = this.readableDatabase
+        val cartItems = mutableListOf<CartItem>()
+        val cursor = db.query(
+            "carrito JOIN productos ON carrito.id_producto = productos.id",
+            arrayOf(
+                "carrito.id as cartId",
+                "productos.id as productId",
+                "name",
+                "price",
+                "cantidad",
+                "image"
+            ), // Especificando las columnas necesarias explícitamente
+            "carrito.id_cliente = ?",
+            arrayOf(userId.toString()),
+            null, null, null
+        )
+        if (cursor.moveToFirst()) {
+            do {
+                val product = CartItem(
+                    id = cursor.getInt(cursor.getColumnIndex("cartId")),
+                    productId = cursor.getInt(cursor.getColumnIndex("productId")), // Añade este campo
+                    name = cursor.getString(cursor.getColumnIndex("name")),
+                    price = cursor.getDouble(cursor.getColumnIndex("price")),
+                    quantity = cursor.getInt(cursor.getColumnIndex("cantidad")),
+                    imageResId = cursor.getString(cursor.getColumnIndex("image"))
+                )
+                cartItems.add(product)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return cartItems
+    }//getCartProducts
+
+
+    fun updateCartItemQuantity(cartId: Int, newQuantity: Int) {
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put("cantidad", newQuantity)
+        db.update("carrito", values, "id = ?", arrayOf(cartId.toString()))
+        db.close()
+    }
+
+    fun removeFromCart(cartId: Int) {
+        val db = this.writableDatabase
+        db.delete("carrito", "id = ?", arrayOf(cartId.toString()))
+        db.close()
+    }
+
+    fun updateProductStock(productId: Int, stockChange: Int) {
+        val db = this.writableDatabase
+        val newStock = getProductStock(productId) - stockChange
+        val values = ContentValues()
+        values.put("stock", newStock)
+        db.update("productos", values, "id = ?", arrayOf(productId.toString()))
+        db.close()
+    }
+
+    fun updateCartAndOrdersStatus(userId: Int, status: String) {
+        val db = this.writableDatabase
+        db.beginTransaction()
+        try {
+            // Actualizar estado en la tabla carrito
+            val valuesCart = ContentValues()
+            valuesCart.put("estado_producto", status)
+            db.update("carrito", valuesCart, "id_cliente=?", arrayOf(userId.toString()))
+
+            // Actualizar estado en la tabla ordenes
+            val valuesOrders = ContentValues()
+            valuesOrders.put("estado", status)
+            db.update("ordenes", valuesOrders, "id_cliente=?", arrayOf(userId.toString()))
+
+            db.setTransactionSuccessful()
         } catch (e: Exception) {
-            Log.e("DatabaseError", "Error al añadir al carrito: ${e.message}")
+            Log.e("DatabaseError", "Error updating cart and orders: ${e.message}")
         } finally {
             db.endTransaction()
             db.close()
         }
-    }//addToCart
-
-    fun getProductStock(productId: Int): Int {
-        val db = this.readableDatabase
-        val cursor = db.query(
-            "productos",
-            arrayOf("stock"),
-            "id = ?",
-            arrayOf(productId.toString()),
-            null,
-            null,
-            null
-        )
-        var stock = 0
-        if (cursor.moveToFirst()) {
-            stock = cursor.getInt(cursor.getColumnIndexOrThrow("stock"))
-        }
-        cursor.close()
-        db.close()
-        return stock
     }
 
-    fun updateProductStock(productId: Int, quantityChange: Int) {
-        val db = writableDatabase
-        try {
-            db.execSQL(
-                "UPDATE productos SET stock = stock + ? WHERE id = ?",
-                arrayOf(quantityChange, productId)
-            )
-        } catch (e: Exception) {
-            Log.e("DatabaseError", "Error updating stock: ${e.localizedMessage}")
-        } finally {
-            db.close()
-        }
-    }
 
 }//DatabaseHelper

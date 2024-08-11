@@ -7,50 +7,69 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.proyectofinal.model.CarritoItem
+import com.example.proyectofinal.model.CartItem
 
-class CarritoAdapter(private var items: List<CarritoItem>) :
-    RecyclerView.Adapter<CarritoAdapter.CartViewHolder>() {
+class CarritoAdapter(private var items: MutableList<CartItem>) :
+    RecyclerView.Adapter<CarritoAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val productName: TextView = view.findViewById(R.id.tvTituloTe)
+        val productPrice: TextView = view.findViewById(R.id.tvPrecioTe)
+        val productImage: ImageView = view.findViewById(R.id.imgvTeCarrito)
+        val quantityText: TextView = view.findViewById(R.id.quantity)
+        val decrementButton: Button = view.findViewById(R.id.decrement)
+        val incrementButton: Button = view.findViewById(R.id.increment)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_carrito, parent, false)
-        return CartViewHolder(view)
+        return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
-        holder.bind(items[position])
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = items[position]
+        holder.productName.text = item.name
+        holder.productPrice.text = "${item.price}"
+        holder.quantityText.text = item.quantity.toString()
+        holder.productImage.setImageResource(
+            holder.itemView.context.resources.getIdentifier(
+                item.imageResId ?: "default_image", "drawable", holder.itemView.context.packageName
+            )
+        )
 
-    override fun getItemCount(): Int = items.size
-
-    class CartViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val imgTe: ImageView = view.findViewById(R.id.imgvTeCarrito)
-        private val title: TextView = view.findViewById(R.id.tvTituloTe)
-        private val price: TextView = view.findViewById(R.id.tvPrecioTe)
-        private val quantity: TextView = view.findViewById(R.id.quantity)
-        private val increaseButton: Button = view.findViewById(R.id.increment)
-        private val decreaseButton: Button = view.findViewById(R.id.decrement)
-
-        fun bind(item: CarritoItem) {
-            title.text = item.name
-            price.text = "\$${item.price}"
-            quantity.text = item.quantity.toString()
-            imgTe.setImageResource(item.imageUrl)
-
-
-            increaseButton.setOnClickListener {
-                // Incrementar lógica aquí
-            }
-
-            decreaseButton.setOnClickListener {
-                // Decrementar lógica aquí
+        holder.decrementButton.setOnClickListener {
+            if (item.quantity > 1) {
+                item.quantity -= 1
+                holder.quantityText.text = item.quantity.toString()
+                // Actualizar base de datos o lógica de negocio aquí
             }
         }
 
-    }//class CartViewHolder
+        holder.incrementButton.setOnClickListener {
+            item.quantity += 1
+            holder.quantityText.text = item.quantity.toString()
+            // Actualizar base de datos o lógica de negocio aquí
+        }
+    }
 
-    fun updateItems(newItems: List<CarritoItem>) {
-        items = newItems
+    override fun getItemCount() = items.size
+
+    fun clearItems() {
+        items.clear()
         notifyDataSetChanged()
     }
-}//Class CarritoAdapter
+
+    // Añadir o quitar items del carrito
+    fun updateItems(newItems: List<CartItem>) {
+        items = newItems.toMutableList()
+        notifyDataSetChanged()
+    }
+
+    // Método para actualizar la cantidad de un producto en el carrito
+    fun updateQuantity(position: Int, quantity: Int) {
+        if (position < items.size) {
+            items[position].quantity = quantity
+            notifyItemChanged(position)
+        }
+    }
+}

@@ -27,3 +27,12 @@ data class Usuario(
     val contrasena: String,
     val tipoUsuario: String
 )
+
+data class CartItem(
+    val id: Int,         // ID del carrito
+    val productId: Int,  // ID del producto
+    val name: String,
+    val price: Double,
+    var quantity: Int,
+    val imageResId: String?
+)

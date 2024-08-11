@@ -59,8 +59,49 @@ class Producto : Fragment() {
                 .commit()
         }//btnPago
         btnCarrito.setOnClickListener {
-            if (isUserLoggedIn()) {
-                Toast.makeText(context, "Producto añadido al carrito", Toast.LENGTH_SHORT).show()
+            val sharedPrefs = activity?.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)
+            val isUserLoggedIn = sharedPrefs?.getBoolean("isLoggedIn", false) ?: false
+
+            if (isUserLoggedIn) {
+                val userId = sharedPrefs?.getInt("userId", -1) ?: -1
+                if (userId != -1) {
+                    val productId = arguments?.getInt("productId") ?: -1
+                    if (productId != -1) {
+                        try {
+                            val productStock = databaseHelper.getProductStock(productId)
+                            if (productStock > 0) {
+                                databaseHelper.addToCart(productId, userId, 1)
+                                databaseHelper.updateProductStock(productId, -1)
+                                Toast.makeText(
+                                    context,
+                                    "Producto añadido al carrito",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "No hay suficiente stock disponible",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(
+                                context,
+                                "Error al añadir al carrito: ${e.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Error: ID de producto no encontrado",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } else {
+                    Toast.makeText(context, "Error: ID de usuario no encontrado", Toast.LENGTH_LONG)
+                        .show()
+                }
             } else {
                 Toast.makeText(
                     context,
