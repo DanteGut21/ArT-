@@ -16,9 +16,11 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var databaseHelper: DatabaseHelper
     private var currentUser: Usuario? = null
+    private var backPressedTime: Long = 0
+    private var backToast: Toast? = null
 
     companion object {
-        private const val REQUEST_LOGIN = 1001  // Identificador único para la solicitud de login
+        private const val REQUEST_LOGIN = 1001
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,53 +28,33 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         databaseHelper = DatabaseHelper(this)
         setupViews()
+        checkLoginStatus()
+    }
 
-        try {
-            val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
-            val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
-            if (isLoggedIn) {
-                val userId = sharedPreferences.getInt("userId", -1)
-                if (userId != -1) {
-                    currentUser = databaseHelper.getUserById(userId)
-                    updateNavigationVisibility()
-                }
-            }
-        } catch (e: Exception) {
-            Toast.makeText(
-                this,
-                "Error al cargar datos del usuario: ${e.message}",
-                Toast.LENGTH_LONG
-            ).show()
-            e.printStackTrace()
-        }
-
-        if (savedInstanceState == null) {
-            loadFragment(Principal())  // Carga el fragmento principal solo si no se ha guardado ningún estado
+    private fun checkLoginStatus() {
+        val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
+        val userId = sharedPreferences.getInt("userId", -1)
+        if (userId != -1) {
+            currentUser = databaseHelper.getUserById(userId)
+            updateNavigationVisibility()
+            loadFragment(Principal())  // Asegura que se carga el fragmento principal si el usuario está logueado
+        } else {
+            // Si no hay usuario logueado o se ha cerrado la sesión, carga un fragmento por defecto
+            currentUser = null
+            updateNavigationVisibility()
+            loadFragment(Principal())  // Carga el fragmento principal como default
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_LOGIN && resultCode == RESULT_OK) {
-            // Verificar estado de sesión usando SharedPreferences
-            val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
-            val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
-            if (isLoggedIn) {
-                val userId = sharedPreferences.getInt("userId", -1)
-                if (userId != -1) {
-                    currentUser = databaseHelper.getUserById(userId)
-                    updateNavigationVisibility()
-                    loadFragment(Principal())  // Carga el fragmento principal basado en el usuario logueado
-                }
-            }
-        }
-    }
 
     private fun setupViews() {
         val toolbar: Toolbar = findViewById(R.id.tbPrincipal)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        setupBottomNavigationView()
+    }
 
+    private fun setupBottomNavigationView() {
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -105,34 +87,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateNavigationVisibility() {
-        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
-        val manageItem = bottomNavigationView.menu.findItem(R.id.navigation_manage)
-        val storeItem = bottomNavigationView.menu.findItem(R.id.navigation_store)
-        val cartItem = bottomNavigationView.menu.findItem(R.id.navigation_cart)
-        val moreItem = bottomNavigationView.menu.findItem(R.id.navigation_more)
-
-        if (currentUser?.tipoUsuario == "admin") {
-            manageItem.isVisible = true
-            storeItem.isVisible = false
-            cartItem.isVisible = false
-            moreItem.isVisible = false
-        } else if (currentUser?.tipoUsuario == "usuario") {
-            manageItem.isVisible = false
-            storeItem.isVisible = true
-            cartItem.isVisible = true
-            moreItem.isVisible = true
-        } else {
-            manageItem.isVisible = false
-            cartItem.isVisible = false
-            moreItem.isVisible = false
-        }
-    }
-
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .commit()
+    }
+
+    override fun onBackPressed() {
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            backToast?.cancel()
+            super.onBackPressed()
+        } else {
+            backToast = Toast.makeText(
+                baseContext,
+                "Presione Atrás nuevamente para salir.",
+                Toast.LENGTH_SHORT
+            )
+            backToast?.show()
+        }
+        backPressedTime = System.currentTimeMillis()
+    }
+
+    private fun updateNavigationVisibility() {
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigationView.menu.apply {
+            findItem(R.id.navigation_manage).isVisible = currentUser?.tipoUsuario == "admin"
+            findItem(R.id.navigation_store).isVisible = currentUser?.tipoUsuario == "usuario"
+            findItem(R.id.navigation_cart).isVisible = currentUser?.tipoUsuario == "usuario"
+            findItem(R.id.navigation_more).isVisible = currentUser?.tipoUsuario == "usuario"
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
