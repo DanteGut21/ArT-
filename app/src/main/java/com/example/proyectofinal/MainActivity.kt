@@ -28,10 +28,15 @@ class MainActivity : AppCompatActivity() {
         setupViews()
 
         try {
-            val email = intent.getStringExtra("userEmail") ?: ""
-            val password = intent.getStringExtra("userPassword") ?: ""
-            currentUser = databaseHelper.getUserById(email, password)
-            updateNavigationVisibility()
+            val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
+            val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
+            if (isLoggedIn) {
+                val userId = sharedPreferences.getInt("userId", -1)
+                if (userId != -1) {
+                    currentUser = databaseHelper.getUserById(userId)
+                    updateNavigationVisibility()
+                }
+            }
         } catch (e: Exception) {
             Toast.makeText(
                 this,
@@ -49,12 +54,16 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_LOGIN && resultCode == RESULT_OK) {
-            data?.let {
-                val email = it.getStringExtra("userEmail") ?: ""
-                val password = it.getStringExtra("userPassword") ?: ""
-                currentUser = databaseHelper.getUserById(email, password)
-                updateNavigationVisibility()
-                loadFragment(Principal())  // Carga el fragmento principal basado en el usuario logueado
+            // Verificar estado de sesión usando SharedPreferences
+            val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
+            val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
+            if (isLoggedIn) {
+                val userId = sharedPreferences.getInt("userId", -1)
+                if (userId != -1) {
+                    currentUser = databaseHelper.getUserById(userId)
+                    updateNavigationVisibility()
+                    loadFragment(Principal())  // Carga el fragmento principal basado en el usuario logueado
+                }
             }
         }
     }

@@ -40,19 +40,20 @@ class Login : AppCompatActivity() {
 
         val user = databaseHelper.getUser(usuario, contraseña)
         if (user != null) {
-            val intent = Intent(this, MainActivity::class.java).apply {
-                putExtra("userEmail", user.correo)  // Pasa el correo electrónico del usuario
-                putExtra(
-                    "userPassword",
-                    user.contrasena
-                )  // Pasa la contraseña para verificar en MainActivity
-            }
-            setResult(RESULT_OK, intent)  // Establece el resultado como OK y adjunta el intent
-            finish()  // Cierra LoginActivity
+            // Guardar estado de sesión en SharedPreferences
+            val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putBoolean("isLoggedIn", true)
+            editor.putInt("userId", user.id)
+            editor.apply()
+
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         } else {
             Toast.makeText(this, "Usuario o contraseña incorrectos.", Toast.LENGTH_SHORT).show()
         }
-    } //Principal
+    }//Principal
 
     fun Registro(vista: View) {
         val intent = Intent(this, Registro::class.java)

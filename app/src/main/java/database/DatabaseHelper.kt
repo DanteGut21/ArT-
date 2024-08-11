@@ -32,8 +32,7 @@ class DatabaseHelper(context: Context) :
             );
         """
         )
-
-        // Crear tabla de usuarios
+        //Tabla de usuarios
         db.execSQL(
             """
             CREATE TABLE usuarios (
@@ -45,6 +44,32 @@ class DatabaseHelper(context: Context) :
                 tipo_usuario TEXT DEFAULT 'usuario'
             );
         """
+        )
+        //Tabla carrito
+        db.execSQL(
+            """
+        CREATE TABLE carrito (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_producto INTEGER,
+            id_cliente INTEGER,
+            cantidad INT DEFAULT 1,
+            estado_producto TEXT CHECK(estado_producto IN ('Pendiente', 'Pagado', 'Cancelado')) DEFAULT 'Pendiente',
+            FOREIGN KEY (id_producto) REFERENCES productos(id),
+            FOREIGN KEY (id_cliente) REFERENCES usuarios(id)
+        );
+    """
+        )
+        //Tabla ordenes
+        db.execSQL(
+            """
+        CREATE TABLE ordenes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_cliente INTEGER,
+            fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+            estado TEXT CHECK(estado IN ('Pendiente', 'Completa', 'Cancelada')) DEFAULT 'Pendiente',
+            FOREIGN KEY (id_cliente) REFERENCES usuarios(id)
+        );
+    """
         )
         Log.d("DatabaseOperation", "Database created successfully")
         initializeDatabase(db)
@@ -307,7 +332,6 @@ class DatabaseHelper(context: Context) :
         onCreate(db)
     }//onUpgrade
 
-    // Método para obtener un producto por ID
     fun getProduct(productId: Int): Product? {
         val db = this.readableDatabase
         val cursor = db.query(
@@ -377,18 +401,18 @@ class DatabaseHelper(context: Context) :
         return user
     }//getUser
 
-    fun getUserById(email: String, password: String): Usuario? {
+    fun getUserById(userId: Int): Usuario? {
         val db = this.readableDatabase
         var cursor: Cursor? = null
         try {
             cursor = db.query(
-                "usuarios",  // Nombre de la tabla
-                null,  // Todas las columnas
-                "correo = ? AND contrasena = ?",  // Cláusula WHERE
-                arrayOf(email, password),  // Valores para la cláusula WHERE
-                null,  // groupBy
-                null,  // having
-                null   // orderBy
+                "usuarios",
+                null,
+                "id = ?",
+                arrayOf(userId.toString()),
+                null,
+                null,
+                null
             )
             if (cursor.moveToFirst()) {
                 return Usuario(
@@ -400,13 +424,75 @@ class DatabaseHelper(context: Context) :
                     tipoUsuario = cursor.getString(cursor.getColumnIndexOrThrow("tipo_usuario"))
                 )
             }
-        } catch (e: Exception) {
-            Log.e("DatabaseHelper", "Error accessing database: ${e.localizedMessage}")
-            e.printStackTrace()
         } finally {
             cursor?.close()
             db.close()
         }
         return null
     }//getUserById
+
+    fun addToCart(productId: Int, userId: Int, cantidad: Int) {
+        val db = this.writableDatabase
+        db.beginTransaction() // Usar transacciones para garantizar la integridad de la data
+        try {
+            // Actualizar el stock del producto
+            val newStock = getProductStock(productId) - cantidad
+            if (newStock >= 0) { // Solo proceder si hay suficiente stock
+                val stockValues = ContentValues()
+                stockValues.put("stock", newStock)
+                db.update("productos", stockValues, "id = ?", arrayOf(productId.toString()))
+
+                // Añadir al carrito
+                val values = ContentValues().apply {
+                    put("id_producto", productId)
+                    put("id_cliente", userId)
+                    put("cantidad", cantidad)
+                }
+                db.insertOrThrow("carrito", null, values)
+                db.setTransactionSuccessful() // Marcar la transacción como exitosa
+            } else {
+                throw Exception("No hay suficiente stock disponible")
+            }
+        } catch (e: Exception) {
+            Log.e("DatabaseError", "Error al añadir al carrito: ${e.message}")
+        } finally {
+            db.endTransaction()
+            db.close()
+        }
+    }//addToCart
+
+    fun getProductStock(productId: Int): Int {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "productos",
+            arrayOf("stock"),
+            "id = ?",
+            arrayOf(productId.toString()),
+            null,
+            null,
+            null
+        )
+        var stock = 0
+        if (cursor.moveToFirst()) {
+            stock = cursor.getInt(cursor.getColumnIndexOrThrow("stock"))
+        }
+        cursor.close()
+        db.close()
+        return stock
+    }
+
+    fun updateProductStock(productId: Int, quantityChange: Int) {
+        val db = writableDatabase
+        try {
+            db.execSQL(
+                "UPDATE productos SET stock = stock + ? WHERE id = ?",
+                arrayOf(quantityChange, productId)
+            )
+        } catch (e: Exception) {
+            Log.e("DatabaseError", "Error updating stock: ${e.localizedMessage}")
+        } finally {
+            db.close()
+        }
+    }
+
 }//DatabaseHelper

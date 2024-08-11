@@ -1,5 +1,6 @@
 package com.example.proyectofinal
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -58,7 +59,7 @@ class Producto : Fragment() {
                 .commit()
         }//btnPago
         btnCarrito.setOnClickListener {
-            if ((activity as MainActivity).checkSession()) {
+            if (isUserLoggedIn()) {
                 Toast.makeText(context, "Producto añadido al carrito", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(
@@ -72,4 +73,9 @@ class Producto : Fragment() {
 
         return view
     }//OnCreate
+
+    private fun isUserLoggedIn(): Boolean {
+        val sharedPreferences = activity?.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)
+        return sharedPreferences?.getBoolean("isLoggedIn", false) ?: false
+    }
 }//Class Producto
