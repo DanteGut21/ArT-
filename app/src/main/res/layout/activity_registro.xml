@@ -114,6 +114,7 @@
                 android:backgroundTint="@color/GreenMint"
                 android:text="Terminar registro"
                 android:textSize="20dp"
+                android:onClick="registrarUsuario"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
         </LinearLayout>
