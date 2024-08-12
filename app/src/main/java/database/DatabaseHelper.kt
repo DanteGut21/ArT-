@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.example.proyectofinal.model.CartItem
+import com.example.proyectofinal.model.Direccion
+import com.example.proyectofinal.model.Item
+import com.example.proyectofinal.model.Order
 import com.example.proyectofinal.model.Product
 import com.example.proyectofinal.model.Usuario
 
@@ -66,14 +69,30 @@ class DatabaseHelper(context: Context) :
         CREATE TABLE ordenes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             id_cliente INTEGER,
-            id_compra INTEGER,
+            id_carrito INTEGER,
             fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
             estado TEXT CHECK(estado IN ('Pendiente', 'Completa', 'Cancelada')) DEFAULT 'Pendiente',
             FOREIGN KEY (id_cliente) REFERENCES usuarios(id),
-            FOREIGN KEY (id_compra) REFERENCES carrito(id)
-        );
-    """
+            FOREIGN KEY (id_carrito) REFERENCES carrito(id)
+        );"""
         )
+
+        db.execSQL(
+            """            
+        CREATE TABLE direcciones (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            calle TEXT NOT NULL,
+            numero_exterior TEXT NOT NULL,
+            codigo_postal TEXT NOT NULL,
+            estado TEXT NOT NULL,
+            ciudad TEXT NOT NULL,
+            colonia TEXT NOT NULL,
+            telefono TEXT NOT NULL,
+            id_cliente INTEGER NOT NULL,
+            FOREIGN KEY (id_cliente) REFERENCES usuarios(id)
+        );"""
+        )
+
         Log.d("DatabaseOperation", "Database created successfully")
         initializeDatabase(db)
     }//OnCreate
@@ -286,11 +305,18 @@ class DatabaseHelper(context: Context) :
                 put("apellido", "User")
                 put("correo", "user@example.com")
                 put("contrasena", "user123")
+            },
+            ContentValues().apply {
+                put("nombre", "Dante")
+                put("apellido", "Gutierrez")
+                put("correo", "dangt@gmail.com")
+                put("contrasena", "12345")
             }
         )
         users.forEach { values ->
             db.insert("usuarios", null, values)
         }
+
     }//initializeDatabase
 
     fun getAllProducts(): List<Product> {
@@ -334,7 +360,6 @@ class DatabaseHelper(context: Context) :
         db.execSQL("DROP TABLE IF EXISTS usuarios")
         onCreate(db)
     }//onUpgrade
-
     fun getProduct(productId: Int): Product? {
         val db = this.readableDatabase
         val cursor = db.query(
@@ -362,7 +387,6 @@ class DatabaseHelper(context: Context) :
         db.close()
         return product
     }//getProduct
-
     fun insertUser(nombre: String, apellido: String, correo: String, contrasena: String): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -375,7 +399,6 @@ class DatabaseHelper(context: Context) :
         db.close()
         return userId
     }//insertUser
-
     fun getUser(correo: String, contrasena: String): Usuario? {
         val db = readableDatabase
         val cursor = db.query(
@@ -403,27 +426,74 @@ class DatabaseHelper(context: Context) :
         db.close()
         return user
     }//getUser
-
-    fun getProductStock(productId: Int): Int {
-        val db = this.readableDatabase
-        val cursor = db.query(
-            "productos",
-            arrayOf("stock"),
-            "id = ?",
-            arrayOf(productId.toString()),
-            null,
-            null,
-            null
-        )
-        var stock = 0
-        if (cursor.moveToFirst()) {
-            stock = cursor.getInt(cursor.getColumnIndexOrThrow("stock"))
+    fun addDireccion(direccion: Direccion): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("calle", direccion.calle)
+            put("numero_exterior", direccion.numeroExterior)
+            put("codigo_postal", direccion.codigoPostal)
+            put("estado", direccion.estado)
+            put("ciudad", direccion.ciudad)
+            put("colonia", direccion.colonia)
+            put("telefono", direccion.telefono)
+            put("id_cliente", direccion.idCliente)
         }
-        cursor.close()
-        db.close()
-        return stock
-    }//getProductStock
+        try {
+            return db.insertOrThrow("direcciones", null, values)
+        } catch (e: Exception) {
+            Log.e("DBError", "Error inserting address: ${e.message}")
+            return -1L
+        } finally {
+            db.close()
+        }
+    }//addDireccion
 
+    fun getAddresses(userId: Int): List<Direccion> {
+        val addresses = mutableListOf<Direccion>()
+        val db = this.readableDatabase
+        var cursor: Cursor? = null
+        try {
+            cursor = db.rawQuery(
+                "SELECT * FROM direcciones WHERE id_cliente = ?",
+                arrayOf(userId.toString())
+            )
+            if (cursor.moveToFirst()) {
+                do {
+                    val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+                    val calle = cursor.getString(cursor.getColumnIndexOrThrow("calle"))
+                    val numeroExterior =
+                        cursor.getString(cursor.getColumnIndexOrThrow("numero_exterior"))
+                    val codigoPostal =
+                        cursor.getString(cursor.getColumnIndexOrThrow("codigo_postal"))
+                    val estado = cursor.getString(cursor.getColumnIndexOrThrow("estado"))
+                    val ciudad = cursor.getString(cursor.getColumnIndexOrThrow("ciudad"))
+                    val colonia = cursor.getString(cursor.getColumnIndexOrThrow("colonia"))
+                    val telefono = cursor.getString(cursor.getColumnIndexOrThrow("telefono"))
+                    val idCliente = cursor.getInt(cursor.getColumnIndexOrThrow("id_cliente"))
+
+                    addresses.add(
+                        Direccion(
+                            id,
+                            calle,
+                            numeroExterior,
+                            codigoPostal,
+                            estado,
+                            ciudad,
+                            colonia,
+                            telefono,
+                            idCliente
+                        )
+                    )
+                } while (cursor.moveToNext())
+            }
+        } catch (e: Exception) {
+            Log.e("DatabaseError", "Error fetching addresses: ${e.message}")
+        } finally {
+            cursor?.close()
+            db.close()
+        }
+        return addresses
+    }//getAddresses
     fun getUserById(userId: Int): Usuario? {
         val db = this.readableDatabase
         var cursor: Cursor? = null
@@ -453,8 +523,6 @@ class DatabaseHelper(context: Context) :
         }
         return null
     }//getUserById
-
-
     fun addToCart(productId: Int, userId: Int, cantidad: Int) {
         val db = this.writableDatabase
         val values = ContentValues().apply {
@@ -467,28 +535,44 @@ class DatabaseHelper(context: Context) :
         db.close()
     }//addToCart
 
+    fun getProductStock(productId: Int): Int {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "productos",
+            arrayOf("stock"),
+            "id = ?",
+            arrayOf(productId.toString()),
+            null,
+            null,
+            null
+        )
+        var stock = 0
+        if (cursor.moveToFirst()) {
+            stock = cursor.getInt(cursor.getColumnIndexOrThrow("stock"))
+        }
+        cursor.close()
+        db.close()
+        return stock
+    }//getProductStock
+
+
     fun getCartProducts(userId: Int): MutableList<CartItem> {
         val db = this.readableDatabase
         val cartItems = mutableListOf<CartItem>()
-        val cursor = db.query(
-            "carrito JOIN productos ON carrito.id_producto = productos.id",
-            arrayOf(
-                "carrito.id as cartId",
-                "productos.id as productId",
-                "name",
-                "price",
-                "cantidad",
-                "image"
-            ), // Especificando las columnas necesarias explícitamente
-            "carrito.id_cliente = ?",
-            arrayOf(userId.toString()),
-            null, null, null
-        )
+        val query = """
+        SELECT carrito.id as cartId, productos.id as productId, name, price, cantidad, image
+        FROM carrito
+        JOIN productos ON carrito.id_producto = productos.id
+        LEFT JOIN ordenes ON carrito.id = ordenes.id_carrito
+        WHERE carrito.id_cliente = ? AND (ordenes.estado IS NULL OR ordenes.estado != 'Completa')
+    """
+        val cursor = db.rawQuery(query, arrayOf(userId.toString()))
+
         if (cursor.moveToFirst()) {
             do {
                 val product = CartItem(
                     id = cursor.getInt(cursor.getColumnIndex("cartId")),
-                    productId = cursor.getInt(cursor.getColumnIndex("productId")), // Añade este campo
+                    productId = cursor.getInt(cursor.getColumnIndex("productId")),
                     name = cursor.getString(cursor.getColumnIndex("name")),
                     price = cursor.getDouble(cursor.getColumnIndex("price")),
                     quantity = cursor.getInt(cursor.getColumnIndex("cantidad")),
@@ -500,8 +584,8 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         db.close()
         return cartItems
-    }//getCartProducts
-
+    }
+//getCartProducts
 
     fun updateCartItemQuantity(cartId: Int, newQuantity: Int) {
         val db = this.writableDatabase
@@ -526,19 +610,57 @@ class DatabaseHelper(context: Context) :
         db.close()
     }
 
+
     fun updateCartAndOrdersStatus(userId: Int, status: String) {
         val db = this.writableDatabase
         db.beginTransaction()
         try {
-            // Actualizar estado en la tabla carrito
-            val valuesCart = ContentValues()
-            valuesCart.put("estado_producto", status)
-            db.update("carrito", valuesCart, "id_cliente=?", arrayOf(userId.toString()))
+            // Obtener todos los carritos activos para este usuario
+            val cartCursor = db.query(
+                "carrito",
+                arrayOf("id"),
+                "id_cliente=?",
+                arrayOf(userId.toString()),
+                null,
+                null,
+                null
+            )
+            val cartIds = mutableListOf<Int>()
+            while (cartCursor.moveToNext()) {
+                cartIds.add(cartCursor.getInt(cartCursor.getColumnIndex("id")))
+            }
+            cartCursor.close()
 
-            // Actualizar estado en la tabla ordenes
+            // Verificar si ya existe una orden para cada carrito y crearla si no existe
+            cartIds.forEach { cartId ->
+                val orderExistsCursor = db.query(
+                    "ordenes",
+                    arrayOf("id"),
+                    "id_carrito=?",
+                    arrayOf(cartId.toString()),
+                    null,
+                    null,
+                    null
+                )
+                if (!orderExistsCursor.moveToFirst()) {
+                    val values = ContentValues().apply {
+                        put("id_cliente", userId)
+                        put("id_carrito", cartId)
+                        put("estado", "Pendiente")  // Estado inicial cuando se crea la orden
+                    }
+                    db.insert("ordenes", null, values)
+                }
+                orderExistsCursor.close()
+            }
+
+            // Actualizar el estado de las órdenes y el carrito
             val valuesOrders = ContentValues()
             valuesOrders.put("estado", status)
             db.update("ordenes", valuesOrders, "id_cliente=?", arrayOf(userId.toString()))
+
+            val valuesCart = ContentValues()
+            valuesCart.put("estado_producto", status)
+            db.update("carrito", valuesCart, "id_cliente=?", arrayOf(userId.toString()))
 
             db.setTransactionSuccessful()
         } catch (e: Exception) {
@@ -549,5 +671,50 @@ class DatabaseHelper(context: Context) :
         }
     }
 
+    fun getOrders(): List<Order> {
+        val orders = mutableListOf<Order>()
+        val db = this.readableDatabase
+        try {
+            val orderCursor = db.rawQuery(
+                """
+        SELECT o.id, u.nombre, o.estado FROM ordenes o
+        JOIN usuarios u ON o.id_cliente = u.id
+        """, null
+            )
 
+            if (orderCursor.moveToFirst()) {
+                do {
+                    val id = orderCursor.getInt(orderCursor.getColumnIndex("id"))
+                    val userName = orderCursor.getString(orderCursor.getColumnIndex("nombre"))
+                    val status = orderCursor.getString(orderCursor.getColumnIndex("estado"))
+                    val items = getItemsForOrder(db, id)
+
+                    orders.add(Order(userName, items, status))
+                } while (orderCursor.moveToNext())
+            }
+            orderCursor.close()
+        } finally {
+            db.close()
+        }
+        return orders
+    }
+
+    private fun getItemsForOrder(db: SQLiteDatabase, orderId: Int): List<Item> {
+        val items = mutableListOf<Item>()
+        val itemsCursor = db.rawQuery(
+            """
+    SELECT p.name, c.cantidad FROM carrito c
+    JOIN productos p ON c.id_producto = p.id
+    WHERE c.id_carrito = ?
+    """, arrayOf(orderId.toString())
+        )
+
+        while (itemsCursor.moveToNext()) {
+            val name = itemsCursor.getString(itemsCursor.getColumnIndex("name"))
+            val quantity = itemsCursor.getInt(itemsCursor.getColumnIndex("cantidad"))
+            items.add(Item(name, quantity))
+        }
+        itemsCursor.close()
+        return items
+    }
 }//DatabaseHelper
