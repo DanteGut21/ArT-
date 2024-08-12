@@ -8,11 +8,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.example.proyectofinal.model.Direccion
 import com.example.proyectofinal.model.Usuario
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import database.DatabaseHelper
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SelectAddressDialog.OnAddressSelectedListener {
 
     private lateinit var databaseHelper: DatabaseHelper
     private var currentUser: Usuario? = null
@@ -137,4 +138,13 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-}
+
+    override fun onAddressSelected(direccion: Direccion) {
+        Toast.makeText(
+            this,
+            "Dirección seleccionada: ${direccion.fullAddress()}",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+}//Class Mainactivity

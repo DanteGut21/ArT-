@@ -36,3 +36,28 @@ data class CartItem(
     var quantity: Int,
     val imageResId: String?
 )
+
+data class Orden(
+    val id: Int,
+    val idCliente: Int,
+    val idCarrito: Int,
+    val idDomicilio: Int,
+    val fecha: String,  // Puede ser una cadena en formato de fecha, o puedes utilizar LocalDateTime si estás manejando fechas en tu aplicación
+    val estado: String  // Los valores pueden ser "Pendiente", "Completa", "Cancelada"
+)
+
+data class Direccion(
+    val id: Int,
+    val calle: String,
+    val numeroExterior: String,
+    val codigoPostal: String,
+    val estado: String,
+    val ciudad: String,
+    val colonia: String,
+    val telefono: String,
+    val idCliente: Int
+) {
+    fun fullAddress(): String {
+        return "$calle $numeroExterior, $colonia, $ciudad, $estado, C.P. $codigoPostal, Tel: $telefono"
+    }
+}

@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.proyectofinal.model.Direccion
 import database.DatabaseHelper
 
 class Producto : Fragment() {
@@ -46,18 +47,66 @@ class Producto : Fragment() {
                 "Error al abrir detalles del producto: ${e.localizedMessage}",
                 Toast.LENGTH_LONG
             ).show()
-        }
+        }//arguments
 
         val btnPago: Button = view.findViewById(R.id.btnPago)
         val btnCarrito: Button = view.findViewById(R.id.btnCarrito)
+
         btnPago.setOnClickListener {
-            Toast.makeText(context, "Preparando opciones de pago...", Toast.LENGTH_SHORT).show()
-            val pagoFragment = Pago()
-            parentFragmentManager.beginTransaction()
-                .add(R.id.fragment_container, pagoFragment)
-                .addToBackStack(null)
-                .commit()
+            val sharedPreferences =
+                activity?.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)
+            val isUserLoggedIn = sharedPreferences?.getBoolean("isLoggedIn", false) ?: false
+
+            if (isUserLoggedIn) {
+                val userId = sharedPreferences?.getInt("userId", -1) ?: -1
+                if (userId != -1) {
+                    try {
+                        val addresses = databaseHelper.getAddresses(userId)
+                        if (addresses.isNotEmpty()) {
+                            val selectAddressDialog = SelectAddressDialog.newInstance(userId)
+                            selectAddressDialog.setOnAddressSelectedListener(object :
+                                SelectAddressDialog.OnAddressSelectedListener {
+                                override fun onAddressSelected(direccion: Direccion) {
+                                    // Aquí puedes iniciar el fragmento de pago
+                                    openPaymentFragment()
+                                }
+                            })
+                            selectAddressDialog.show(parentFragmentManager, "SelectAddressDialog")
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "No tienes direcciones guardadas. Por favor, agrega una dirección.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            // Ejemplo de cómo crear y mostrar DireccionFragment desde otra parte (e.g., Producto)
+                            val direccionFragment = DireccionFragment.newInstance(userId)
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragment_container, direccionFragment)
+                                .addToBackStack(null)
+                                .commit()
+
+                        }
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            context,
+                            "Error al procesar el pago: ${e.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } else {
+                    Toast.makeText(context, "Error: ID de usuario no encontrado", Toast.LENGTH_LONG)
+                        .show()
+                }
+            } else {
+                Toast.makeText(
+                    context,
+                    "Por favor, inicia sesión para continuar.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                startActivity(Intent(activity, Login::class.java))
+            }
         }//btnPago
+
         btnCarrito.setOnClickListener {
             val sharedPrefs = activity?.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)
             val isUserLoggedIn = sharedPrefs?.getBoolean("isLoggedIn", false) ?: false
@@ -113,10 +162,17 @@ class Producto : Fragment() {
         }//btnCarrito
 
         return view
-    }//OnCreate
 
-    private fun isUserLoggedIn(): Boolean {
-        val sharedPreferences = activity?.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)
-        return sharedPreferences?.getBoolean("isLoggedIn", false) ?: false
+
+    }//onCreateView
+
+    private fun openPaymentFragment() {
+        val pagoFragment = Pago()
+        parentFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, pagoFragment)
+            .addToBackStack(null)
+            .commit()
     }
-}//Class Producto
+
+
+}//Class producto
