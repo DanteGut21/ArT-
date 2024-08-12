@@ -48,9 +48,13 @@ class Carrito : Fragment() {
         // Botón para vaciar el carrito
         view.findViewById<Button>(R.id.btnPEliminar).setOnClickListener {
             if (userId != -1) {
-                databaseHelper.updateCartAndOrdersStatus(userId, "Cancelado")
+                databaseHelper.cancelCartAndCreateOrder(userId)
                 adapter.clearItems()
-                Toast.makeText(context, "Carrito vaciado con éxito", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    "Carrito cancelado y orden registrada como cancelada",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -115,12 +119,17 @@ class Carrito : Fragment() {
     }//btnPPago
 
     private fun openPaymentFragment() {
-        val pagoFragment = Pago()
+        val pagoFragment = Pago().apply {
+            arguments = Bundle().apply {
+                putInt("userId", userId)
+            }
+        }
         parentFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, pagoFragment)
+            .replace(R.id.fragment_container, pagoFragment)
             .addToBackStack(null)
             .commit()
     }
+
 
     private fun refreshCartItems() {
         val sharedPreferences = activity?.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)

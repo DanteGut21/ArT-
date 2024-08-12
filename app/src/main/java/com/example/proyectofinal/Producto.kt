@@ -59,7 +59,9 @@ class Producto : Fragment() {
 
             if (isUserLoggedIn) {
                 val userId = sharedPreferences?.getInt("userId", -1) ?: -1
-                if (userId != -1) {
+                val productId = arguments?.getInt("productId")
+                    ?: -1 // Asegúrate de que este valor se pase a los argumentos del fragmento
+                if (userId != -1 && productId != -1) {
                     try {
                         val addresses = databaseHelper.getAddresses(userId)
                         if (addresses.isNotEmpty()) {
@@ -67,8 +69,8 @@ class Producto : Fragment() {
                             selectAddressDialog.setOnAddressSelectedListener(object :
                                 SelectAddressDialog.OnAddressSelectedListener {
                                 override fun onAddressSelected(direccion: Direccion) {
-                                    // Aquí puedes iniciar el fragmento de pago
-                                    openPaymentFragment()
+                                    // Inicia el fragmento de pago pasando el ID del usuario y del producto
+                                    openPaymentFragment(userId, productId)
                                 }
                             })
                             selectAddressDialog.show(parentFragmentManager, "SelectAddressDialog")
@@ -78,13 +80,12 @@ class Producto : Fragment() {
                                 "No tienes direcciones guardadas. Por favor, agrega una dirección.",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            // Ejemplo de cómo crear y mostrar DireccionFragment desde otra parte (e.g., Producto)
+                            // Ejemplo de cómo crear y mostrar DireccionFragment desde otra parte
                             val direccionFragment = DireccionFragment.newInstance(userId)
                             parentFragmentManager.beginTransaction()
                                 .replace(R.id.fragment_container, direccionFragment)
                                 .addToBackStack(null)
                                 .commit()
-
                         }
                     } catch (e: Exception) {
                         Toast.makeText(
@@ -105,7 +106,8 @@ class Producto : Fragment() {
                 ).show()
                 startActivity(Intent(activity, Login::class.java))
             }
-        }//btnPago
+        }
+//btnPago
 
         btnCarrito.setOnClickListener {
             val sharedPrefs = activity?.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)
@@ -166,13 +168,22 @@ class Producto : Fragment() {
 
     }//onCreateView
 
-    private fun openPaymentFragment() {
-        val pagoFragment = Pago()
+    private fun openPaymentFragment(userId: Int, productId: Int) {
+        val cartId = databaseHelper.ensureCartExists(
+            userId,
+            productId
+        ) // Asegura que el carrito exista o crea uno nuevo
+        val pagoFragment = Pago().apply {
+            arguments = Bundle().apply {
+                putInt("userId", userId)
+                putInt("productId", productId)
+                putInt("cartId", cartId) // Pasa el cartId generado o existente
+            }
+        }
         parentFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, pagoFragment)
+            .replace(R.id.fragment_container, pagoFragment)
             .addToBackStack(null)
             .commit()
     }
-
 
 }//Class producto

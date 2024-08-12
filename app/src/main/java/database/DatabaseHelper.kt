@@ -717,4 +717,130 @@ class DatabaseHelper(context: Context) :
         itemsCursor.close()
         return items
     }
+
+    fun cancelCartAndCreateOrder(userId: Int) {
+        val db = this.writableDatabase
+        db.beginTransaction()
+        try {
+            val cartCursor = db.query(
+                "carrito",
+                arrayOf("id"),
+                "id_cliente=? AND estado_producto = 'Pendiente'",
+                arrayOf(userId.toString()),
+                null,
+                null,
+                null
+            )
+            val cartIds = mutableListOf<Int>()
+            while (cartCursor.moveToNext()) {
+                cartIds.add(cartCursor.getInt(cartCursor.getColumnIndex("id")))
+            }
+            cartCursor.close()
+
+            cartIds.forEach { cartId ->
+                // Crear una orden cancelada si no existe
+                val orderCursor = db.query(
+                    "ordenes",
+                    arrayOf("id"),
+                    "id_carrito=?",
+                    arrayOf(cartId.toString()),
+                    null,
+                    null,
+                    null
+                )
+                if (!orderCursor.moveToFirst()) {
+                    val orderValues = ContentValues().apply {
+                        put("id_cliente", userId)
+                        put("id_carrito", cartId)
+                        put("estado", "Cancelada")
+                    }
+                    db.insert("ordenes", null, orderValues)
+                }
+                orderCursor.close()
+
+                // Actualizar el carrito a cancelado
+                val cartValues = ContentValues()
+                cartValues.put("estado_producto", "Cancelado")
+                db.update("carrito", cartValues, "id=?", arrayOf(cartId.toString()))
+            }
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            Log.e("DatabaseError", "Error updating cart and orders: ${e.message}")
+        } finally {
+            db.endTransaction()
+            db.close()
+        }
+    }
+
+    fun createOrUpdateOrder(userId: Int, paymentMethod: String) {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            // Verificar si existe una orden pendiente para el usuario
+            val cursor = db.query(
+                "ordenes",
+                arrayOf("id"),
+                "id_cliente=? AND estado='Pendiente'",
+                arrayOf(userId.toString()),
+                null,
+                null,
+                null
+            )
+
+            val orderValues = ContentValues()
+            if (cursor.moveToFirst()) {
+                // Si existe, actualizar el método de pago
+                val orderId = cursor.getInt(cursor.getColumnIndex("id"))
+                orderValues.put(
+                    "payment_method",
+                    paymentMethod
+                ) // Asumiendo que existe una columna para método de pago
+                db.update("ordenes", orderValues, "id=?", arrayOf(orderId.toString()))
+            } else {
+                // Si no existe, crear una nueva orden
+                orderValues.apply {
+                    put("id_cliente", userId)
+                    put("estado", "Pendiente")
+                    put(
+                        "payment_method",
+                        paymentMethod
+                    ) // Asegúrate de tener esta columna en tu tabla
+                }
+                db.insert("ordenes", null, orderValues)
+            }
+            cursor.close()
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            Log.e("DatabaseError", "Error updating or creating order: ${e.message}")
+        } finally {
+            db.endTransaction()
+            db.close()
+        }
+    }
+
+    fun ensureCartExists(userId: Int, productId: Int): Int {
+        val db = writableDatabase
+        // Primero verifica si existe un carrito activo para este usuario y producto
+        val cursor = db.rawQuery(
+            "SELECT id FROM carrito WHERE id_cliente = ? AND id_producto = ? AND estado_producto = 'Pendiente'",
+            arrayOf(userId.toString(), productId.toString())
+        )
+        if (cursor.moveToFirst()) {
+            val cartId = cursor.getInt(cursor.getColumnIndex("id"))
+            cursor.close()
+            return cartId
+        } else {
+            cursor.close()
+            // No existe, crea un nuevo carrito
+            val values = ContentValues()
+            values.put("id_cliente", userId)
+            values.put("id_producto", productId)
+            values.put("cantidad", 1) // Suponiendo una cantidad predeterminada de 1
+            values.put("estado_producto", "Pendiente")
+            val newCartId = db.insert("carrito", null, values).toInt()
+            return newCartId
+        }
+    }
+
+
 }//DatabaseHelper
