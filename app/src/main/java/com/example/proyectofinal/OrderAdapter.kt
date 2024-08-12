@@ -11,9 +11,9 @@ class OrderAdapter(private val orders: List<Order>) :
     RecyclerView.Adapter<OrderAdapter.OrderViewHolder>() {
 
     class OrderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val userNameTextView: TextView = view.findViewById(R.id.userNameTextView)
-        val itemsTextView: TextView = view.findViewById(R.id.itemsTextView)
-        val statusTextView: TextView = view.findViewById(R.id.statusTextView)
+        val textViewId: TextView = view.findViewById(R.id.textViewId)
+        val textViewFecha: TextView = view.findViewById(R.id.textViewFecha)
+        val textViewEstado: TextView = view.findViewById(R.id.textViewEstado)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
@@ -23,10 +23,11 @@ class OrderAdapter(private val orders: List<Order>) :
 
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
         val order = orders[position]
-        holder.userNameTextView.text = order.userName
-        holder.itemsTextView.text = order.items.joinToString { "${it.name} x${it.quantity}" }
-        holder.statusTextView.text = order.status
+        holder.textViewId.text =
+            "Order ID: ${order.id}, Cliente ID: ${order.idCliente}, Carrito ID: ${order.idCarrito}"
+        holder.textViewFecha.text = "Fecha: ${order.fecha}"
+        holder.textViewEstado.text = "Estado: ${order.estado}"
     }
 
     override fun getItemCount(): Int = orders.size
-}//Class OrderAdapter
+}

@@ -6,9 +6,11 @@ data class Item(
 )
 
 data class Order(
-    val userName: String,
-    val items: List<Item>,
-    val status: String
+    val id: Int,
+    val idCliente: Int,
+    val idCarrito: Int,
+    val fecha: String,
+    val estado: String
 )
 data class Product(
     val id: Int,

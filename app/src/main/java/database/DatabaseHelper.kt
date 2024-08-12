@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.example.proyectofinal.model.CartItem
 import com.example.proyectofinal.model.Direccion
-import com.example.proyectofinal.model.Item
 import com.example.proyectofinal.model.Order
 import com.example.proyectofinal.model.Product
 import com.example.proyectofinal.model.Usuario
@@ -317,6 +316,29 @@ class DatabaseHelper(context: Context) :
             db.insert("usuarios", null, values)
         }
 
+        val orders = listOf(
+            ContentValues().apply {
+                put("id_cliente", 1)  // Asumiendo que el ID de usuario 1 existe
+                put("id_carrito", 1)  // Asumiendo que el ID de carrito 1 existe
+                put("estado", "Pendiente")
+            },
+            ContentValues().apply {
+                put("id_cliente", 1)
+                put("id_carrito", 2)
+                put("estado", "Completa")
+            },
+            ContentValues().apply {
+                put("id_cliente", 2)  // Asumiendo que el ID de usuario 2 existe
+                put("id_carrito", 3)
+                put("estado", "Cancelada")
+            }
+        )
+
+        // Insertar los datos iniciales en la tabla de órdenes
+        orders.forEach { orderValues ->
+            db.insert("ordenes", null, orderValues)
+        }
+
     }//initializeDatabase
 
     fun getAllProducts(): List<Product> {
@@ -386,7 +408,7 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         db.close()
         return product
-    }//getProduct
+    }//Producto
     fun insertUser(nombre: String, apellido: String, correo: String, contrasena: String): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -398,7 +420,7 @@ class DatabaseHelper(context: Context) :
         val userId = db.insert("usuarios", null, values)
         db.close()
         return userId
-    }//insertUser
+    }//Login
     fun getUser(correo: String, contrasena: String): Usuario? {
         val db = readableDatabase
         val cursor = db.query(
@@ -425,7 +447,7 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         db.close()
         return user
-    }//getUser
+    }//Login
     fun addDireccion(direccion: Direccion): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -446,7 +468,7 @@ class DatabaseHelper(context: Context) :
         } finally {
             db.close()
         }
-    }//addDireccion
+    }//Direccion
 
     fun getAddresses(userId: Int): List<Direccion> {
         val addresses = mutableListOf<Direccion>()
@@ -493,7 +515,7 @@ class DatabaseHelper(context: Context) :
             db.close()
         }
         return addresses
-    }//getAddresses
+    }//Direccion
     fun getUserById(userId: Int): Usuario? {
         val db = this.readableDatabase
         var cursor: Cursor? = null
@@ -522,7 +544,7 @@ class DatabaseHelper(context: Context) :
             db.close()
         }
         return null
-    }//getUserById
+    }//MainActivity
     fun addToCart(productId: Int, userId: Int, cantidad: Int) {
         val db = this.writableDatabase
         val values = ContentValues().apply {
@@ -533,8 +555,7 @@ class DatabaseHelper(context: Context) :
         }
         db.insert("carrito", null, values)
         db.close()
-    }//addToCart
-
+    }//Producto
     fun getProductStock(productId: Int): Int {
         val db = this.readableDatabase
         val cursor = db.query(
@@ -553,9 +574,7 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         db.close()
         return stock
-    }//getProductStock
-
-
+    }//Producto
     fun getCartProducts(userId: Int): MutableList<CartItem> {
         val db = this.readableDatabase
         val cartItems = mutableListOf<CartItem>()
@@ -584,9 +603,7 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         db.close()
         return cartItems
-    }
-//getCartProducts
-
+    }//Carrito
     fun updateCartItemQuantity(cartId: Int, newQuantity: Int) {
         val db = this.writableDatabase
         val values = ContentValues()
@@ -594,13 +611,11 @@ class DatabaseHelper(context: Context) :
         db.update("carrito", values, "id = ?", arrayOf(cartId.toString()))
         db.close()
     }
-
     fun removeFromCart(cartId: Int) {
         val db = this.writableDatabase
         db.delete("carrito", "id = ?", arrayOf(cartId.toString()))
         db.close()
     }
-
     fun updateProductStock(productId: Int, stockChange: Int) {
         val db = this.writableDatabase
         val newStock = getProductStock(productId) - stockChange
@@ -608,9 +623,61 @@ class DatabaseHelper(context: Context) :
         values.put("stock", newStock)
         db.update("productos", values, "id = ?", arrayOf(productId.toString()))
         db.close()
-    }
+    }//Producto
 
+    fun cancelCartAndCreateOrder(userId: Int) {
+        val db = this.writableDatabase
+        db.beginTransaction()
+        try {
+            val cartCursor = db.query(
+                "carrito",
+                arrayOf("id"),
+                "id_cliente=? AND estado_producto = 'Pendiente'",
+                arrayOf(userId.toString()),
+                null,
+                null,
+                null
+            )
+            val cartIds = mutableListOf<Int>()
+            while (cartCursor.moveToNext()) {
+                cartIds.add(cartCursor.getInt(cartCursor.getColumnIndex("id")))
+            }
+            cartCursor.close()
 
+            cartIds.forEach { cartId ->
+                // Crear una orden cancelada si no existe
+                val orderCursor = db.query(
+                    "ordenes",
+                    arrayOf("id"),
+                    "id_carrito=?",
+                    arrayOf(cartId.toString()),
+                    null,
+                    null,
+                    null
+                )
+                if (!orderCursor.moveToFirst()) {
+                    val orderValues = ContentValues().apply {
+                        put("id_cliente", userId)
+                        put("id_carrito", cartId)
+                        put("estado", "Cancelada")
+                    }
+                    db.insert("ordenes", null, orderValues)
+                }
+                orderCursor.close()
+
+                // Actualizar el carrito a cancelado
+                val cartValues = ContentValues()
+                cartValues.put("estado_producto", "Cancelado")
+                db.update("carrito", cartValues, "id=?", arrayOf(cartId.toString()))
+            }
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            Log.e("DatabaseError", "Error updating cart and orders: ${e.message}")
+        } finally {
+            db.endTransaction()
+            db.close()
+        }
+    }//carrito
     fun updateCartAndOrdersStatus(userId: Int, status: String) {
         val db = this.writableDatabase
         db.beginTransaction()
@@ -669,108 +736,7 @@ class DatabaseHelper(context: Context) :
             db.endTransaction()
             db.close()
         }
-    }
-
-    fun getOrders(): List<Order> {
-        val orders = mutableListOf<Order>()
-        val db = this.readableDatabase
-        try {
-            val orderCursor = db.rawQuery(
-                """
-        SELECT o.id, u.nombre, o.estado FROM ordenes o
-        JOIN usuarios u ON o.id_cliente = u.id
-        """, null
-            )
-
-            if (orderCursor.moveToFirst()) {
-                do {
-                    val id = orderCursor.getInt(orderCursor.getColumnIndex("id"))
-                    val userName = orderCursor.getString(orderCursor.getColumnIndex("nombre"))
-                    val status = orderCursor.getString(orderCursor.getColumnIndex("estado"))
-                    val items = getItemsForOrder(db, id)
-
-                    orders.add(Order(userName, items, status))
-                } while (orderCursor.moveToNext())
-            }
-            orderCursor.close()
-        } finally {
-            db.close()
-        }
-        return orders
-    }
-
-    private fun getItemsForOrder(db: SQLiteDatabase, orderId: Int): List<Item> {
-        val items = mutableListOf<Item>()
-        val itemsCursor = db.rawQuery(
-            """
-    SELECT p.name, c.cantidad FROM carrito c
-    JOIN productos p ON c.id_producto = p.id
-    WHERE c.id_carrito = ?
-    """, arrayOf(orderId.toString())
-        )
-
-        while (itemsCursor.moveToNext()) {
-            val name = itemsCursor.getString(itemsCursor.getColumnIndex("name"))
-            val quantity = itemsCursor.getInt(itemsCursor.getColumnIndex("cantidad"))
-            items.add(Item(name, quantity))
-        }
-        itemsCursor.close()
-        return items
-    }
-
-    fun cancelCartAndCreateOrder(userId: Int) {
-        val db = this.writableDatabase
-        db.beginTransaction()
-        try {
-            val cartCursor = db.query(
-                "carrito",
-                arrayOf("id"),
-                "id_cliente=? AND estado_producto = 'Pendiente'",
-                arrayOf(userId.toString()),
-                null,
-                null,
-                null
-            )
-            val cartIds = mutableListOf<Int>()
-            while (cartCursor.moveToNext()) {
-                cartIds.add(cartCursor.getInt(cartCursor.getColumnIndex("id")))
-            }
-            cartCursor.close()
-
-            cartIds.forEach { cartId ->
-                // Crear una orden cancelada si no existe
-                val orderCursor = db.query(
-                    "ordenes",
-                    arrayOf("id"),
-                    "id_carrito=?",
-                    arrayOf(cartId.toString()),
-                    null,
-                    null,
-                    null
-                )
-                if (!orderCursor.moveToFirst()) {
-                    val orderValues = ContentValues().apply {
-                        put("id_cliente", userId)
-                        put("id_carrito", cartId)
-                        put("estado", "Cancelada")
-                    }
-                    db.insert("ordenes", null, orderValues)
-                }
-                orderCursor.close()
-
-                // Actualizar el carrito a cancelado
-                val cartValues = ContentValues()
-                cartValues.put("estado_producto", "Cancelado")
-                db.update("carrito", cartValues, "id=?", arrayOf(cartId.toString()))
-            }
-            db.setTransactionSuccessful()
-        } catch (e: Exception) {
-            Log.e("DatabaseError", "Error updating cart and orders: ${e.message}")
-        } finally {
-            db.endTransaction()
-            db.close()
-        }
-    }
+    }//Pago/Carrito
 
     fun createOrUpdateOrder(userId: Int, paymentMethod: String) {
         val db = writableDatabase
@@ -840,6 +806,90 @@ class DatabaseHelper(context: Context) :
             val newCartId = db.insert("carrito", null, values).toInt()
             return newCartId
         }
+    }
+
+//    fun getOrders(): List<Order> {
+//        val orders = mutableListOf<Order>()
+//        val db = this.readableDatabase
+//        try {
+//            val query = """
+//            SELECT o.id, u.nombre, o.estado,
+//                   p.name AS product_name, c.cantidad AS quantity
+//            FROM ordenes o
+//            JOIN usuarios u ON o.id_cliente = u.id
+//            JOIN carrito c ON o.id_carrito = c.id
+//            JOIN productos p ON c.id_producto = p.id
+//        """
+//            val orderCursor = db.rawQuery(query, null)
+//
+//            var currentOrderId = -1
+//            var currentOrder: Order? = null
+//
+//            if (orderCursor.moveToFirst()) {
+//                do {
+//                    val orderId = orderCursor.getInt(orderCursor.getColumnIndex("id"))
+//                    if (orderId != currentOrderId) {
+//                        if (currentOrder != null) {
+//                            orders.add(currentOrder)
+//                        }
+//                        currentOrderId = orderId
+//                        val userName = orderCursor.getString(orderCursor.getColumnIndex("nombre"))
+//                        val status = orderCursor.getString(orderCursor.getColumnIndex("estado"))
+//                        currentOrder = Order(userName, mutableListOf(), status)
+//                    }
+//
+//                    val productName = orderCursor.getString(orderCursor.getColumnIndex("product_name"))
+//                    val quantity = orderCursor.getInt(orderCursor.getColumnIndex("quantity"))
+//                    currentOrder.items.add(Item(productName, quantity))
+//
+//                } while (orderCursor.moveToNext())
+//
+//                // Add last order
+//                currentOrder?.let { orders.add(it) }
+//            }
+//            orderCursor.close()
+//        } finally {
+//            db.close()
+//        }
+//        return orders
+//    }
+//    private fun getItemsForOrder(db: SQLiteDatabase, orderId: Int): List<Item> {
+//        val items = mutableListOf<Item>()
+//        val itemsCursor = db.rawQuery(
+//            """
+//        SELECT p.name, c.cantidad FROM carrito c
+//        JOIN productos p ON c.id_producto = p.id
+//        WHERE c.id = ?
+//        """, arrayOf(orderId.toString())
+//        )
+//
+//        while (itemsCursor.moveToNext()) {
+//            val name = itemsCursor.getString(itemsCursor.getColumnIndex("name"))
+//            val quantity = itemsCursor.getInt(itemsCursor.getColumnIndex("cantidad"))
+//            items.add(Item(name, quantity))
+//        }
+//        itemsCursor.close()
+//        return items
+//    }
+
+    fun getAllOrders(): List<Order> {
+        val orders = mutableListOf<Order>()
+        val db = this.readableDatabase
+        val query = "SELECT * FROM ordenes"
+        val cursor = db.rawQuery(query, null)
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndex("id"))
+                val idCliente = cursor.getInt(cursor.getColumnIndex("id_cliente"))
+                val idCarrito = cursor.getInt(cursor.getColumnIndex("id_carrito"))
+                val fecha = cursor.getString(cursor.getColumnIndex("fecha"))
+                val estado = cursor.getString(cursor.getColumnIndex("estado"))
+                orders.add(Order(id, idCliente, idCarrito, fecha, estado))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return orders
     }
 
 
