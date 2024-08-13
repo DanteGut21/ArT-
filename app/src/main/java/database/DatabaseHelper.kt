@@ -808,70 +808,6 @@ class DatabaseHelper(context: Context) :
         }
     }
 
-//    fun getOrders(): List<Order> {
-//        val orders = mutableListOf<Order>()
-//        val db = this.readableDatabase
-//        try {
-//            val query = """
-//            SELECT o.id, u.nombre, o.estado,
-//                   p.name AS product_name, c.cantidad AS quantity
-//            FROM ordenes o
-//            JOIN usuarios u ON o.id_cliente = u.id
-//            JOIN carrito c ON o.id_carrito = c.id
-//            JOIN productos p ON c.id_producto = p.id
-//        """
-//            val orderCursor = db.rawQuery(query, null)
-//
-//            var currentOrderId = -1
-//            var currentOrder: Order? = null
-//
-//            if (orderCursor.moveToFirst()) {
-//                do {
-//                    val orderId = orderCursor.getInt(orderCursor.getColumnIndex("id"))
-//                    if (orderId != currentOrderId) {
-//                        if (currentOrder != null) {
-//                            orders.add(currentOrder)
-//                        }
-//                        currentOrderId = orderId
-//                        val userName = orderCursor.getString(orderCursor.getColumnIndex("nombre"))
-//                        val status = orderCursor.getString(orderCursor.getColumnIndex("estado"))
-//                        currentOrder = Order(userName, mutableListOf(), status)
-//                    }
-//
-//                    val productName = orderCursor.getString(orderCursor.getColumnIndex("product_name"))
-//                    val quantity = orderCursor.getInt(orderCursor.getColumnIndex("quantity"))
-//                    currentOrder.items.add(Item(productName, quantity))
-//
-//                } while (orderCursor.moveToNext())
-//
-//                // Add last order
-//                currentOrder?.let { orders.add(it) }
-//            }
-//            orderCursor.close()
-//        } finally {
-//            db.close()
-//        }
-//        return orders
-//    }
-//    private fun getItemsForOrder(db: SQLiteDatabase, orderId: Int): List<Item> {
-//        val items = mutableListOf<Item>()
-//        val itemsCursor = db.rawQuery(
-//            """
-//        SELECT p.name, c.cantidad FROM carrito c
-//        JOIN productos p ON c.id_producto = p.id
-//        WHERE c.id = ?
-//        """, arrayOf(orderId.toString())
-//        )
-//
-//        while (itemsCursor.moveToNext()) {
-//            val name = itemsCursor.getString(itemsCursor.getColumnIndex("name"))
-//            val quantity = itemsCursor.getInt(itemsCursor.getColumnIndex("cantidad"))
-//            items.add(Item(name, quantity))
-//        }
-//        itemsCursor.close()
-//        return items
-//    }
-
     fun getAllOrders(): List<Order> {
         val orders = mutableListOf<Order>()
         val db = this.readableDatabase
@@ -890,7 +826,7 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         db.close()
         return orders
-    }
+    }//Ordenes
 
 
 }//DatabaseHelper

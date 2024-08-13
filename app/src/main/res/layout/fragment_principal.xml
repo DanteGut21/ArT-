@@ -24,13 +24,13 @@
                 android:layout_height="200dp"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
-                android:src="@drawable/te" />
+                android:src="@drawable/jazmin" />
             <TextView
                 android:id="@+id/teaName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:text="Nombre del té"
+                android:text="Té Floreciente Jazmín"
                 android:paddingLeft="15dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/GreenLeave"
@@ -48,19 +48,17 @@
                 android:orientation="vertical"
                 android:padding="16dp">
                 <!-- TextView para el título del diálogo -->
-                <TextView
-                    android:id="@+id/dialogTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dialog Title"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                <!--                                                      xtAppearance="@style/TextAppearance.AppCompat.Medium" />-->
                 <!-- TextView para el cuerpo del diálogo -->
                 <TextView
                     android:id="@+id/dialogBody"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="8dp"
-                    android:text="Dialog body text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                    android:text="Hecho a mano enrollando las hojas con flores de jazmín en orbes de
+                loto, un sabor dulce y refrescante de cuerpo completo, y un agradable
+                retrogusto floral de larga duración, lleno de antioxidantes para aliviar el
+                estrés y vigorizar la juventud."
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>

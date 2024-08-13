@@ -73,6 +73,7 @@ class DireccionFragment : Fragment() {
                                 "Dirección guardada con éxito",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            parentFragmentManager.popBackStack()
                         } else {
                             Toast.makeText(
                                 context,

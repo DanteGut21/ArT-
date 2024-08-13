@@ -140,7 +140,7 @@ class Producto : Fragment() {
                                 context,
                                 "Error al añadir al carrito: ${e.message}",
                                 Toast.LENGTH_LONG
-                            ).show()
+                            )
                         }
                     } else {
                         Toast.makeText(
